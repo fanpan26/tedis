@@ -12,6 +12,8 @@ import org.tio.utils.SystemTimer;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 核心业务，包含TioClient的连接，命令的发送
  * */
@@ -74,7 +76,10 @@ public class Connection implements Closeable {
     private String getReponse() {
         for (; ; ) {
             try {
-                TedisPacket packet = QueueFactory.get(clientName).take();
+                TedisPacket packet = QueueFactory.get(clientName).poll(2000, TimeUnit.MILLISECONDS);
+                if(packet == null){
+                    return null;
+                }
                 return packet.hasBody() ? SafeEncoder.encode(packet.getBody()) : null;
             } catch (InterruptedException e) {
                 e.printStackTrace();
