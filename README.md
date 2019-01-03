@@ -6,5 +6,5 @@
 * redis协议
 * tio客户端的使用方式
 * ByteBuffer的使用
-* 学会字节处理
+* Jedis源码
 * 其他...
