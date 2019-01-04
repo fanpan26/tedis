@@ -47,7 +47,7 @@ public class TedisAioHandler implements ClientAioHandler {
     @Override
     public Packet decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
         //debug(buffer,position,readableLength);
-        return (TedisPacket) BufferReader.process(buffer, limit, position, true);
+        return BufferReader.decode(buffer, limit, position);
     }
 
     private void debug(ByteBuffer buffer,int position,int readableLength) {

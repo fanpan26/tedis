@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import redis.clients.tedis.Tedis;
 import redis.clients.tedis.TedisPubSub;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class Consumer {
     private static final Logger logger = LoggerFactory.getLogger(Producer.class);

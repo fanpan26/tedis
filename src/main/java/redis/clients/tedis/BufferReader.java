@@ -125,7 +125,7 @@ public class BufferReader {
         }
         List<Object> results =new ArrayList<>(count);
         for (int i=0;i<count;i++){
-            Object ret = process(buffer,buffer.limit(),buffer.position(),false);
+            Object ret = processInternal(buffer,buffer.limit(),buffer.position());
             if(ret == null){
                 return null;
             }
@@ -134,19 +134,37 @@ public class BufferReader {
         return results;
     }
 
-    public static Object process(ByteBuffer buffer, int limit, int position, boolean buildPacket) throws AioDecodeException {
+    private static Object processInternal(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
         byte first = buffer.get();
         switch (first) {
             case Protocol.PLUS_BYTE:
-                return buildPacket ? buildPacket((byte[]) readSingleLineBody(buffer, limit, position)) : readSingleLineBody(buffer, limit, position);
+                return readSingleLineBody(buffer, limit, position);
             case Protocol.DOLLAR_BYTE:
-                return buildPacket ? buildPacket((byte[]) readFixedLengthBody(buffer, limit, position)) : readFixedLengthBody(buffer, limit, position);
+                return readFixedLengthBody(buffer, limit, position);
             case Protocol.MINUS_BYTE:
                 break;
             case Protocol.ASTERISK_BYTE:
-                return buildPacket ? buildPacket((List<Object>)readMulityLineBody(buffer,limit,position)):readMulityLineBody(buffer,limit,position);
+                return readMulityLineBody(buffer,limit,position);
             case Protocol.COLON_BYTE:
-                return buildPacket ? buildPacket((int)readIntegerBody(buffer, limit, position)) : readIntegerBody(buffer, limit, position);
+                return readIntegerBody(buffer, limit, position);
+        }
+        //其他情况直接return null，需要确保每种情况解析正确
+        return null;
+    }
+
+    public static TedisPacket decode(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+        byte first = buffer.get();
+        switch (first) {
+            case Protocol.PLUS_BYTE:
+                return buildPacket((byte[]) readSingleLineBody(buffer, limit, position));
+            case Protocol.DOLLAR_BYTE:
+                return buildPacket((byte[]) readFixedLengthBody(buffer, limit, position));
+            case Protocol.MINUS_BYTE:
+                break;
+            case Protocol.ASTERISK_BYTE:
+                return buildPacket((List<Object>) readMulityLineBody(buffer, limit, position));
+            case Protocol.COLON_BYTE:
+                return buildPacket((int) readIntegerBody(buffer, limit, position));
         }
         //其他情况直接return null，需要确保每种情况解析正确
         return null;
