@@ -12,17 +12,17 @@ import static redis.clients.tedis.Command.*;
 public class BufferReader {
 
     public static boolean isCr(byte b) {
-        return b == '\r';
+        return b == Protocol.CR;
     }
 
     public static boolean isLf(byte b) {
-        return b == '\n';
+        return b == Protocol.LF;
     }
 
-    private static long readLongCrLf(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+    private static long readLongCrLf(ByteBuffer buffer) throws AioDecodeException {
         long value = 0L;
         boolean isNeg = false;
-        while (position <= limit) {
+        while (buffer.hasRemaining()) {
             byte b = buffer.get();
             if (b == '-') {
                 isNeg = true;
@@ -41,8 +41,8 @@ public class BufferReader {
         return isNeg ? -value : value;
     }
 
-    private static int readIntCrLf(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
-        return (int) readLongCrLf(buffer, limit, position);
+    private static int readIntCrLf(ByteBuffer buffer) throws AioDecodeException {
+        return (int) readLongCrLf(buffer);
     }
 
     /**
@@ -55,7 +55,7 @@ public class BufferReader {
         //结束标志
         boolean endFlag = false;
 
-        while (buffer.position() <= limit) {
+        while (buffer.hasRemaining()) {
             byte b = buffer.get();
             //如果是\r
             if (isCr(b)) {
@@ -82,8 +82,8 @@ public class BufferReader {
      * 服务器响应信息解析
      * $号开头，例如 $5\r\nredis\r\n
      */
-    private static Object readFixedLengthBody(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
-        int bodyLength = readIntCrLf(buffer, limit, position);
+    private static Object readFixedLengthBody(ByteBuffer buffer) throws AioDecodeException {
+        int bodyLength = readIntCrLf(buffer);
         if (bodyLength == -1) {
             return TedisPacket.Empty();
         }
@@ -111,15 +111,15 @@ public class BufferReader {
      * 服务器响应信息解析
      * :号开头，例如 :1\r\n
      */
-    private static Object readIntegerBody(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
-        return readIntCrLf(buffer, limit, position);
+    private static Object readIntegerBody(ByteBuffer buffer) throws AioDecodeException {
+        return readIntCrLf(buffer);
     }
     /**
      * 服务器响应信息解析
      * *号开头，例如 *3\r\n$3\r\nset\r\n$1\r\na\r\n$2\r\nb\r\n
      */
-    private static Object readMulityLineBody(ByteBuffer buffer,int limit,int position) throws  AioDecodeException{
-        int count = readIntCrLf(buffer,limit,position);
+    private static Object readMulityLineBody(ByteBuffer buffer) throws  AioDecodeException{
+        int count = readIntCrLf(buffer);
         if(count == -1){
             return null;
         }
@@ -140,13 +140,13 @@ public class BufferReader {
             case Protocol.PLUS_BYTE:
                 return readSingleLineBody(buffer, limit, position);
             case Protocol.DOLLAR_BYTE:
-                return readFixedLengthBody(buffer, limit, position);
+                return readFixedLengthBody(buffer);
             case Protocol.MINUS_BYTE:
                 break;
             case Protocol.ASTERISK_BYTE:
-                return readMulityLineBody(buffer,limit,position);
+                return readMulityLineBody(buffer);
             case Protocol.COLON_BYTE:
-                return readIntegerBody(buffer, limit, position);
+                return readIntegerBody(buffer);
         }
         //其他情况直接return null，需要确保每种情况解析正确
         return null;
@@ -158,13 +158,13 @@ public class BufferReader {
             case Protocol.PLUS_BYTE:
                 return buildPacket((byte[]) readSingleLineBody(buffer, limit, position));
             case Protocol.DOLLAR_BYTE:
-                return buildPacket((byte[]) readFixedLengthBody(buffer, limit, position));
+                return buildPacket((byte[]) readFixedLengthBody(buffer));
             case Protocol.MINUS_BYTE:
                 break;
             case Protocol.ASTERISK_BYTE:
-                return buildPacket((List<Object>) readMulityLineBody(buffer, limit, position));
+                return buildPacket((List<Object>) readMulityLineBody(buffer));
             case Protocol.COLON_BYTE:
-                return buildPacket((int) readIntegerBody(buffer, limit, position));
+                return buildPacket((int) readIntegerBody(buffer));
         }
         //其他情况直接return null，需要确保每种情况解析正确
         return null;

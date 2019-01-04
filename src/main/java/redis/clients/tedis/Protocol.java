@@ -5,19 +5,16 @@ public final class Protocol {
 
     public static final byte DOLLAR_BYTE = '$';
     public static final byte ASTERISK_BYTE = '*';
-    /*
-     * 返回一行字符串结果  +OK
-     * */
     public static final byte PLUS_BYTE = '+';
-    /*
-     * 返回一行字符串结果  -ERR
-     * */
     public static final byte MINUS_BYTE = '-';
     public static final byte COLON_BYTE = ':';
 
     public static final String CHARSET = "utf-8";
     public static final String DEFAULT_HOST = "127.0.0.1";
     public static final int DEFAULT_PORT = 6379;
+
+    public static final byte CR = '\r';
+    public static final byte LF = '\n';
     //响应超时时间，2000ms
     public static final long DEFAULT_RESPONSE_TIMEOUT = 2000L;
 

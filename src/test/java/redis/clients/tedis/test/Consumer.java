@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import redis.clients.tedis.Tedis;
 import redis.clients.tedis.TedisPubSub;
 
-
 public class Consumer {
     private static final Logger logger = LoggerFactory.getLogger(Producer.class);
 
