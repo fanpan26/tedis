@@ -8,10 +8,11 @@ import org.tio.client.intf.ClientAioHandler;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Node;
 import org.tio.core.Tio;
-import org.tio.utils.SystemTimer;
+import org.tio.core.intf.Packet;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,6 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class Connection implements Closeable {
 
     private static int CLIENT_INDEX = 0;
+
+    public String getClientName() {
+        return clientName;
+    }
 
     private String clientName;
     private String host;
@@ -65,22 +70,47 @@ public class Connection implements Closeable {
         send(body);
     }
 
-    public String getStatusCodeReply(){
-        return getReponse();
+    public String getStatusCodeReply() {
+        return getBulkReply();
     }
 
-    public String getBulkReply(){
-        return getReponse();
+    public int getIntegerReply() {
+        TedisPacket packet = getReponse();
+        if (packet == null) {
+            return -1;
+        }
+        return packet.hasBody() ? BufferReader.bytes2Int(packet.getBody()) : -1;
     }
 
-    private String getReponse() {
+    public String getBulkReply() {
+        TedisPacket packet = getReponse();
+        if (packet == null) {
+            return null;
+        }
+        return packet.hasBody() ? SafeEncoder.encode(packet.getBody()) : null;
+    }
+
+
+
+    private TedisPacket getReponse() {
         for (; ; ) {
             try {
-                TedisPacket packet = QueueFactory.get(clientName).poll(2000, TimeUnit.MILLISECONDS);
+                return QueueFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    public List<Object> getSubscribeReply(){
+        for (; ; ) {
+            try {
+                TedisPacket packet =  QueueFactory.getSubscribe(clientName).take();
                 if(packet == null){
                     return null;
                 }
-                return packet.hasBody() ? SafeEncoder.encode(packet.getBody()) : null;
+               return packet.getObjects();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 return null;
@@ -127,8 +157,11 @@ public class Connection implements Closeable {
                 && isConnected == true;
     }
     public void disconnect(){
-        if (isConnected()){
-
+        if (isConnected()) {
+            tioClient.stop();
+            clientChannelContext = null;
+            isConnected = false;
+            tioClient = null;
         }
     }
 }

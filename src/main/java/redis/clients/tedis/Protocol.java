@@ -55,21 +55,9 @@ public final class Protocol {
                 .append('\n');
     }
 
-    public enum Command implements ProtocolCommand{
-        SET, GET,PING;
 
-        private final String name;
-        Command() {
-            name = this.name();
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-    }
 
     public static void main(String[] args){
-        Protocol.buildCommandBody(Protocol.Command.SET,"key","value");
+        Protocol.buildCommandBody(Command.SET,"key","value");
     }
 }

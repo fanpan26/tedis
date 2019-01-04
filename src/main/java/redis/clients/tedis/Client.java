@@ -1,7 +1,9 @@
 package redis.clients.tedis;
 
 
-public class Client extends Connection {
+import static redis.clients.tedis.Command.*;
+
+public class Client extends Connection implements Commands{
     public Client(){
         super();
     }
@@ -25,15 +27,28 @@ public class Client extends Connection {
         }
     }
 
+    @Override
     public void set(final String key,final String value) {
-        sendCommand(Protocol.Command.SET, key, value);
+        sendCommand(Command.SET, key, value);
     }
 
+    @Override
     public void get(final String key) {
-        sendCommand(Protocol.Command.GET, key);
+        sendCommand(GET, key);
     }
 
+    @Override
     public void  ping(){
-        sendCommand(Protocol.Command.PING);
+        sendCommand(PING);
+    }
+
+    @Override
+    public void publish(final String channel, final String message) {
+        sendCommand(Command.PUBLISH,channel,message);
+    }
+
+    @Override
+    public void subscribe(final String... channels) {
+        sendCommand(SUBSCRIBE,channels);
     }
 }

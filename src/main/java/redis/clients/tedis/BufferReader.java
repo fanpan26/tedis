@@ -3,18 +3,23 @@ package redis.clients.tedis;
 import org.tio.core.exception.AioDecodeException;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static redis.clients.tedis.Command.*;
 
 public class BufferReader {
 
-    public static boolean isCr(byte b){
-        return b=='\r';
+    public static boolean isCr(byte b) {
+        return b == '\r';
     }
 
-    public static boolean isLf(byte b){
-        return b=='\n';
+    public static boolean isLf(byte b) {
+        return b == '\n';
     }
 
-    public static long readLongCrLf(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+    private static long readLongCrLf(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
         long value = 0L;
         boolean isNeg = false;
         while (position <= limit) {
@@ -36,7 +41,167 @@ public class BufferReader {
         return isNeg ? -value : value;
     }
 
-    public static int readIntCrLf(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+    private static int readIntCrLf(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
         return (int) readLongCrLf(buffer, limit, position);
+    }
+
+    /**
+     * 服务器响应信息解析
+     * +号开头，例如 +OK\r\n
+     */
+    private static Object readSingleLineBody(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+        byte[] body = new byte[limit - position];
+        int i = 0;
+        //结束标志
+        boolean endFlag = false;
+
+        while (buffer.position() <= limit) {
+            byte b = buffer.get();
+            //如果是\r
+            if (isCr(b)) {
+                byte c = buffer.get();
+                //如果不是\n抛出异常
+                if (!isLf(c)) {
+                    throw new AioDecodeException("unexpected redis server response");
+                }
+                //结束解析
+                endFlag = true;
+                break;
+            } else {
+                body[i++] = b;
+            }
+        }
+        //如果此次解析一直没有遇到\r\n，则返回null，等待下次解析
+        if (!endFlag) {
+            return null;
+        }
+        return body;
+    }
+
+    /**
+     * 服务器响应信息解析
+     * $号开头，例如 $5\r\nredis\r\n
+     */
+    private static Object readFixedLengthBody(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+        int bodyLength = readIntCrLf(buffer, limit, position);
+        if (bodyLength == -1) {
+            return TedisPacket.Empty();
+        }
+
+        //剩下的长度不够解析body，返回null，等待下次解析
+        if (buffer.remaining() < bodyLength) {
+            return null;
+        }
+
+        byte[] body = new byte[bodyLength];
+        buffer.get(body, 0, bodyLength);
+
+        //读取crlf
+        if (buffer.remaining() >= 2) {
+            buffer.get();
+            buffer.get();
+        } else {
+            //CRLF没有传回，等待下一次解码
+            return null;
+        }
+        return body;
+    }
+
+    /**
+     * 服务器响应信息解析
+     * :号开头，例如 :1\r\n
+     */
+    private static Object readIntegerBody(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+        return readIntCrLf(buffer, limit, position);
+    }
+    /**
+     * 服务器响应信息解析
+     * *号开头，例如 *3\r\n$3\r\nset\r\n$1\r\na\r\n$2\r\nb\r\n
+     */
+    private static Object readMulityLineBody(ByteBuffer buffer,int limit,int position) throws  AioDecodeException{
+        int count = readIntCrLf(buffer,limit,position);
+        if(count == -1){
+            return null;
+        }
+        List<Object> results =new ArrayList<>(count);
+        for (int i=0;i<count;i++){
+            Object ret = process(buffer,buffer.limit(),buffer.position(),false);
+            if(ret == null){
+                return null;
+            }
+            results.add(ret);
+        }
+        return results;
+    }
+
+    public static Object process(ByteBuffer buffer, int limit, int position, boolean buildPacket) throws AioDecodeException {
+        byte first = buffer.get();
+        switch (first) {
+            case Protocol.PLUS_BYTE:
+                return buildPacket ? buildPacket((byte[]) readSingleLineBody(buffer, limit, position)) : readSingleLineBody(buffer, limit, position);
+            case Protocol.DOLLAR_BYTE:
+                return buildPacket ? buildPacket((byte[]) readFixedLengthBody(buffer, limit, position)) : readFixedLengthBody(buffer, limit, position);
+            case Protocol.MINUS_BYTE:
+                break;
+            case Protocol.ASTERISK_BYTE:
+                return buildPacket ? buildPacket((List<Object>)readMulityLineBody(buffer,limit,position)):readMulityLineBody(buffer,limit,position);
+            case Protocol.COLON_BYTE:
+                return buildPacket ? buildPacket((int)readIntegerBody(buffer, limit, position)) : readIntegerBody(buffer, limit, position);
+        }
+        //其他情况直接return null，需要确保每种情况解析正确
+        return null;
+    }
+
+    private static TedisPacket buildPacket(byte[] body) {
+        if(body == null){
+            return null;
+        }
+        return new TedisPacket(body);
+    }
+
+    private static TedisPacket buildPacket(int value) {
+       return buildPacket(int2Bytes(value));
+    }
+
+    private static TedisPacket buildPacket(List<Object> reply) {
+        if(reply == null || reply.isEmpty()){
+            return null;
+        }
+        final Object firstObj = reply.get(0);
+
+        final byte[] resp = (byte[]) firstObj;
+
+        if (Arrays.equals(SUBSCRIBE.raw, resp)
+                || Arrays.equals(UNSUBSCRIBE.raw, resp)
+                || Arrays.equals(MESSAGE.raw, resp)
+                || Arrays.equals(PMESSAGE.raw, resp)
+                || Arrays.equals(PSUBSCRIBE.raw, resp)
+                || Arrays.equals(PUNSUBSCRIBE.raw, resp)
+                || Arrays.equals(PONG.raw, resp)) {
+
+            TedisPacket subscribePacket = new TedisPacket();
+            subscribePacket.setObjects(reply);
+            return subscribePacket;
+        }else {
+            //待续
+            return new TedisPacket();
+        }
+    }
+
+    public static byte[] int2Bytes(int value) {
+        byte[] bytes = new byte[4];
+        bytes[3] = (byte) (value >> 24);
+        bytes[2] = (byte) (value >> 16);
+        bytes[1] = (byte) (value >> 8);
+        bytes[0] = (byte) value;
+        return bytes;
+    }
+
+    public static int bytes2Int(byte[] bytes ) {
+        int int1 = bytes[0] & 0xff;
+        int int2 = (bytes[1] & 0xff) << 8;
+        int int3 = (bytes[2] & 0xff) << 16;
+        int int4 = (bytes[3] & 0xff) << 24;
+        return int1 | int2 | int3 | int4;
     }
 }

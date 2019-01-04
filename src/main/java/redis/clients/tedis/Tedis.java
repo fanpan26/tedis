@@ -1,8 +1,11 @@
 package redis.clients.tedis;
 
-import org.tio.utils.SystemTimer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Tedis  implements TedisCommands  {
+
+    private static Logger logger = LoggerFactory.getLogger(Tedis.class);
 
     private Client client;
 
@@ -43,15 +46,25 @@ public class Tedis  implements TedisCommands  {
         return client.getStatusCodeReply();
     }
 
-    public static void main(String[] args) {
-        Tedis tedis = new Tedis("192.168.1.225", 6379);
-        tedis.ping();
-        long start = SystemTimer.currentTimeMillis();
-        for (int i = 0; i < 200; i++) {
-            tedis.set("tedis", "tedis");
-        }
-        tedis.get("tedis");
-        long end = SystemTimer.currentTimeMillis();
-        System.out.println("总共用时：" + (end - start) + "ms,平均用时：" + ((end - start) / 100) + "ms");
+    /**
+     * 发布
+     *
+     * @param channel
+     * @param message
+     */
+    @Override
+    public int publish(String channel, String message) {
+        client.publish(channel,message);
+        return client.getIntegerReply();
+    }
+
+    /**
+     * 订阅
+     *
+     * @param channels
+     */
+    @Override
+    public void subscribe(TedisPubSub pubSub,final String... channels){
+        pubSub.proceed(client,channels);
     }
 }

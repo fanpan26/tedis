@@ -10,5 +10,17 @@ public interface TedisCommands {
      * */
     String get(String key);
 
+    /**
+     * ping
+     * */
     String ping();
+
+    /**
+     * 发布
+     * */
+    int publish(final String channel,final String message);
+    /**
+     * 订阅
+     * */
+    void subscribe(TedisPubSub pubSub, final String... channels);
 }
