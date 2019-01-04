@@ -51,4 +51,19 @@ public class Client extends Connection implements Commands{
     public void subscribe(final String... channels) {
         sendCommand(SUBSCRIBE,channels);
     }
+
+    @Override
+    public void unSubscribe(String... channels) {
+        sendCommand(UNSUBSCRIBE,channels);
+    }
+
+    @Override
+    public void pSubscribe(String... channelPatterns) {
+        sendCommand(PSUBSCRIBE, channelPatterns);
+    }
+
+    @Override
+    public void pUnSubscribe(String... channelPatterns) {
+        sendCommand(PUNSUBSCRIBE,channelPatterns);
+    }
 }

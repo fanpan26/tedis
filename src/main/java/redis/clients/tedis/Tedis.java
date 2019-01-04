@@ -3,17 +3,17 @@ package redis.clients.tedis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Tedis  implements TedisCommands  {
+public class Tedis  implements TedisCommands {
 
     private static Logger logger = LoggerFactory.getLogger(Tedis.class);
 
     private Client client;
 
-    public Tedis(){
+    public Tedis() {
         client = new Client();
     }
 
-    public  Tedis(final String host,final int port) {
+    public Tedis(final String host, final int port) {
         client = new Client(host, port);
     }
 
@@ -25,8 +25,8 @@ public class Tedis  implements TedisCommands  {
      */
     @Override
     public String set(String key, String value) {
-       client.set(key,value);
-       return client.getStatusCodeReply();
+        client.set(key, value);
+        return client.getStatusCodeReply();
     }
 
     /**
@@ -36,8 +36,8 @@ public class Tedis  implements TedisCommands  {
      */
     @Override
     public String get(String key) {
-       client.get(key);
-       return client.getBulkReply();
+        client.get(key);
+        return client.getBulkReply();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Tedis  implements TedisCommands  {
      */
     @Override
     public int publish(String channel, String message) {
-        client.publish(channel,message);
+        client.publish(channel, message);
         return client.getIntegerReply();
     }
 
@@ -64,7 +64,18 @@ public class Tedis  implements TedisCommands  {
      * @param channels
      */
     @Override
-    public void subscribe(TedisPubSub pubSub,final String... channels){
-        pubSub.proceed(client,channels);
+    public void subscribe(TedisPubSub pubSub, final String... channels) {
+        pubSub.proceed(client, channels);
+    }
+
+    /**
+     * 模式订阅
+     *
+     * @param pubSub
+     * @param channelPatterns
+     */
+    @Override
+    public void pSubscribe(TedisPubSub pubSub, String... channelPatterns) {
+        pubSub.proceedPatterns(client, channelPatterns);
     }
 }

@@ -23,4 +23,8 @@ public interface TedisCommands {
      * 订阅
      * */
     void subscribe(TedisPubSub pubSub, final String... channels);
+    /**
+     * 模式订阅
+     * */
+    void pSubscribe(TedisPubSub pubSub,final String... channelPatterns);
 }

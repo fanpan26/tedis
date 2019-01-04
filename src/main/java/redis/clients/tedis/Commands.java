@@ -6,4 +6,7 @@ public interface Commands {
     void ping();
     void publish(final String channel,final String message);
     void subscribe(final String... channels);
+    void unSubscribe(final String... channels);
+    void pSubscribe(final String... channelPatterns);
+    void pUnSubscribe(final String... channelPatterns);
 }
