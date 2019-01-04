@@ -1,8 +1,5 @@
 package redis.clients.tedis;
 
-import javafx.concurrent.Task;
-import org.omg.CORBA.OBJ_ADAPTER;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +50,7 @@ public abstract class TedisPubSub {
         if(channels == null || channels.length == 0){
             throw new NullPointerException("channels");
         }
-        QueueFactory.putSubscribe(client.getClientName());
+        QueueFactory.put(client.getSubscribeId());
     }
 
     private void  resetSubscribedChannels(List<Object> reply) {

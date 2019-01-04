@@ -13,14 +13,7 @@ public class QueueFactory {
         queues.putIfAbsent(clientName, new LinkedBlockingQueue<>());
     }
 
-    public static void putSubscribe(final String clientName) {
-        queues.putIfAbsent(clientName + "_subscribe", new LinkedBlockingQueue<>());
-    }
-
     public static LinkedBlockingQueue<TedisPacket> get(final String clientName){
         return queues.get(clientName);
-    }
-    public static LinkedBlockingQueue<TedisPacket> getSubscribe(final String clientName){
-        return queues.get(clientName+ "_subscribe");
     }
 }

@@ -26,6 +26,10 @@ public class Connection implements Closeable {
         return clientName;
     }
 
+    public String getSubscribeId() {
+        return getClientName() + "_subscribe";
+    }
+
     private String clientName;
     private String host;
     private int port;
@@ -66,8 +70,7 @@ public class Connection implements Closeable {
     }
 
     public void sendCommand(final ProtocolCommand cmd, final String... args) {
-        byte[] body = Protocol.buildCommandBody(cmd, args);
-        send(body);
+        send(Protocol.buildCommandBody(cmd, args));
     }
 
     public String getStatusCodeReply() {
@@ -106,7 +109,7 @@ public class Connection implements Closeable {
     public List<Object> getSubscribeReply(){
         for (; ; ) {
             try {
-                TedisPacket packet =  QueueFactory.getSubscribe(clientName).take();
+                TedisPacket packet =  QueueFactory.get(getSubscribeId()).take();
                 if(packet == null){
                     return null;
                 }

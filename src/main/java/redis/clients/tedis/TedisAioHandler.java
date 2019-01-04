@@ -15,9 +15,11 @@ public class TedisAioHandler implements ClientAioHandler {
     private static final Logger logger = LoggerFactory.getLogger(TedisAioHandler.class);
 
     private String clientName;
+    private String subscribeId;
 
     public TedisAioHandler(final String clientName) {
         this.clientName = clientName;
+        this.subscribeId = clientName + "_subscribe";
         QueueFactory.put(this.clientName);
     }
 
@@ -50,7 +52,7 @@ public class TedisAioHandler implements ClientAioHandler {
         return BufferReader.decode(buffer, limit, position);
     }
 
-    private void debug(ByteBuffer buffer,int position,int readableLength) {
+    private void debug(ByteBuffer buffer, int position, int readableLength) {
         byte[] body = new byte[readableLength];
         buffer.get(body);
         System.out.println(new String(body));
@@ -92,9 +94,9 @@ public class TedisAioHandler implements ClientAioHandler {
     public void handler(Packet packet, ChannelContext channelContext) throws Exception {
         TedisPacket responsePacket = (TedisPacket) packet;
         if (responsePacket != null) {
-            if(responsePacket.isSubscribeBody()){
-                QueueFactory.getSubscribe(clientName).put(responsePacket);
-            }else {
+            if (responsePacket.isSubscribeBody()) {
+                QueueFactory.get(subscribeId).put(responsePacket);
+            } else {
                 QueueFactory.get(clientName).put(responsePacket);
             }
         }
