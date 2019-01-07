@@ -16,3 +16,4 @@
 ### 更新日志
 * 2019-1-3 GET SET PING 命令。+，$ 包解析
 * 2019-1-4 PUBSUB 命令。* 包解析
+* 2019-1-7 DECRBY, DECR, INCRBY, INCR 命令，修复解析字符串多余byte（0）的bug
