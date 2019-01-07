@@ -36,10 +36,10 @@ public final class Protocol {
                 .append(cmd.getName());
         appendCrLf(builder);
 
-        //遍历参数，按照 $[num]\r\n[content]\r\n的格式拼接
+        //foreach，format as $[num]\r\n[content]\r\n,this length must be bytes.length
         for (String arg : args) {
             builder.append("$")
-                    .append(arg.length());
+                    .append(SafeEncoder.encode(arg).length);
             appendCrLf(builder)
                     .append(arg);
             appendCrLf(builder);
