@@ -1,5 +1,6 @@
 package redis.clients.tedis;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.tio.client.ClientChannelContext;
 import org.tio.client.ClientGroupContext;
 import org.tio.client.ReconnConf;
@@ -54,10 +55,14 @@ public class Connection implements Closeable {
         this.host = host;
         this.port = port;
         serverNode = new Node(this.host, this.port);
-        clientName ="tio-redis-client-"+(CLIENT_INDEX++);
+        clientName = buildClientName();
         handler = new TedisAioHandler(clientName);
         clientGroupContext = new ClientGroupContext(handler, listener, reconnConf);
         clientGroupContext.setName(clientName);
+    }
+
+    private String buildClientName() {
+        return Protocol.CLIENT_NAME_PREFIX + (CLIENT_INDEX++);
     }
 
     public void connect() throws Exception {

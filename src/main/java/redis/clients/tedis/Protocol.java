@@ -18,6 +18,8 @@ public final class Protocol {
 
     public static final long DEFAULT_RESPONSE_TIMEOUT = 5000L;
 
+    public static final String CLIENT_NAME_PREFIX = "tio-redis-client-";
+
     public static byte[] buildCommandBody(final ProtocolCommand cmd,String... args) {
         StringBuilder builder = new StringBuilder();
         //*[num]
