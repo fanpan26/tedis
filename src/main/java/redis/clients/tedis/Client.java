@@ -86,4 +86,17 @@ public class Client extends Connection implements Commands {
     public void decrBy(final String key, long value) {
         sendCommand(DECRBY, key, String.valueOf(value));
     }
+
+    @Override
+    public void exists(final String key){
+        sendCommand(EXISTS,key);
+    }
+    @Override
+    public void del(final String key){
+        sendCommand(DEL,key);
+    }
+    @Override
+    public void quit(){
+        sendCommand(QUIT);
+    }
 }

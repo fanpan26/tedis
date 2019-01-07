@@ -21,32 +21,56 @@ public class TedisTest {
     }
 
     @Test
-    public void get(){
+    public void get() {
         String result = tedis.get("test");
         Assert.assertEquals("test", result);
     }
 
     @Test
-    public void incr(){
+    public void incr() {
         long res = tedis.incr("incr_key");
-        Assert.assertEquals(true,res>0);
+        Assert.assertEquals(true, res > 0);
     }
 
     @Test
-    public void incrBy(){
-        long res = tedis.incrBy("incr_key_by",10);
-        Assert.assertEquals(true,res>=10);
+    public void incrBy() {
+        long res = tedis.incrBy("incr_key_by", 10);
+        Assert.assertEquals(true, res >= 10);
     }
 
     @Test
-    public void decr(){
+    public void decr() {
         long res = tedis.decr("decr_key");
-        Assert.assertEquals(true,res<0);
+        Assert.assertEquals(true, res < 0);
     }
 
     @Test
-    public void decrBy(){
-        long res = tedis.decrBy("decr_key_by",10);
-        Assert.assertEquals(true,res<=-10);
+    public void decrBy() {
+        long res = tedis.decrBy("decr_key_by", 10);
+        Assert.assertEquals(true, res <= -10);
+    }
+
+    @Test
+    public void exists() {
+        tedis.set("exist_key", "1");
+        boolean res = tedis.exists("exist_key");
+        Assert.assertEquals(true, res);
+    }
+
+    @Test
+    public void del() {
+        boolean res = tedis.del("decr_key");
+        Assert.assertEquals(true, res);
+    }
+
+    @Test
+    public void ping(){
+        tedis.ping();
+    }
+
+    @Test
+    public void quit(){
+        tedis.ping();
+        tedis.quit();
     }
 }

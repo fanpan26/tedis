@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static redis.clients.tedis.Command.*;
+import static redis.clients.tedis.Keyword.*;
 
 public class BufferReader {
 

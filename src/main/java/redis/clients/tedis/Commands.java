@@ -13,4 +13,7 @@ public interface Commands {
     void decr(final String key);
     void incrBy(final String key,long value);
     void decrBy(final String key,long value);
+    void exists(final String key);
+    void del(final String key);
+    void quit();
 }

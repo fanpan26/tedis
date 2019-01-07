@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static redis.clients.tedis.Command.*;
+import static redis.clients.tedis.Keyword.*;
+
 
 public abstract class TedisPubSub {
 
@@ -85,7 +86,7 @@ public abstract class TedisPubSub {
 
     private boolean handleSubscribe(byte[] resp,List<Object> reply){
         boolean isSubscribe = Arrays.equals(SUBSCRIBE.raw, resp);
-        boolean isPSubscribe = Arrays.equals(PSUBSCRIBE.raw, resp);
+        boolean isPSubscribe = Arrays.equals(Keyword.PSUBSCRIBE.raw, resp);
         if (isSubscribe || isPSubscribe) {
             resetSubscribedChannels(reply);
             final byte[] channelBytes = (byte[]) reply.get(1);

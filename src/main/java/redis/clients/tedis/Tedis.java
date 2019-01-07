@@ -102,4 +102,22 @@ public class Tedis  implements TedisCommands {
         client.decrBy(key, value);
         return client.getLongReply();
     }
+
+    @Override
+    public boolean del(String key) {
+        client.del(key);
+        return client.getIntegerReply() == 0;
+    }
+
+    @Override
+    public boolean exists(String key) {
+        client.exists(key);
+        return client.getIntegerReply() > 0;
+    }
+    @Override
+    public void quit() {
+        client.quit();
+        client.getStatusCodeReply();
+        client.disconnect();
+    }
 }
