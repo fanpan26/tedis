@@ -7,7 +7,12 @@ public class MyPubSub extends TedisPubSub {
 
     @Override
     public void onMessage(String channel, String message) {
-        System.out.println(channel+"收到了消息："+message);
+        System.out.println(channel + "收到了消息："+message);
+    }
+
+    @Override
+    public void onPMessage(String pattern, String channel, String message) {
+        System.out.println( channel + "("+pattern+")收到了消息："+message);
     }
 
     @Override

@@ -9,7 +9,6 @@ public class Consumer {
 
     public static void main(String[] args) {
         Tedis tedis = new Tedis("192.168.1.225", 6379);
-
-        tedis.subscribe(new MyPubSub(),"channel1","channel2");
+        tedis.pSubscribe(new MyPubSub(),"news.*");
     }
 }

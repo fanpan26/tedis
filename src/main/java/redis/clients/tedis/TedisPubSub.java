@@ -10,6 +10,7 @@ import static redis.clients.tedis.Keyword.*;
 public abstract class TedisPubSub {
 
     public abstract void onMessage(final String channel,final String message);
+    public abstract void onPMessage(final String pattern,final String channel,final String message);
     public abstract void onSubscribe(final String channel);
     public abstract void onPSubscribe(final String channelPatterns);
     public  abstract void onUnSubscribe(final String channel);
@@ -85,13 +86,19 @@ public abstract class TedisPubSub {
     }
 
     private boolean handleSubscribe(byte[] resp,List<Object> reply){
+        //是否普通订阅
         boolean isSubscribe = Arrays.equals(SUBSCRIBE.raw, resp);
+        //是否模式匹配订阅
         boolean isPSubscribe = Arrays.equals(Keyword.PSUBSCRIBE.raw, resp);
+
         if (isSubscribe || isPSubscribe) {
             resetSubscribedChannels(reply);
+            //第二个值为 channel 名称
             final byte[] channelBytes = (byte[]) reply.get(1);
+            //转化为 string
             final String channel = getString(channelBytes);
 
+            //调用事件 (onSubscribe,onPSubscribe 子类可以重写)
             if (isSubscribe) {
                 onSubscribe(channel);
             } else {
@@ -113,13 +120,21 @@ public abstract class TedisPubSub {
        return false;
     }
 
-    private boolean handleMessage(byte[] resp, List<Object> reply){
-        if (Arrays.equals(MESSAGE.raw, resp) || Arrays.equals(PMESSAGE.raw, resp)) {
-            final byte[] channelBytes = (byte[]) reply.get(1);
-            final byte[] messageBytes = (byte[]) reply.get(2);
-            final String channel = getString(channelBytes);
-            final String message = getString(messageBytes);
-            onMessage(channel, message);
+    private boolean handleMessage(byte[] resp, List<Object> reply) {
+        boolean isMessage = Arrays.equals(MESSAGE.raw, resp);
+        boolean isPMessage = Arrays.equals(PMESSAGE.raw, resp);
+        if (isMessage || isPMessage) {
+            final byte[] secondBytes = (byte[]) reply.get(1);
+            final byte[] thirdBytes = (byte[]) reply.get(2);
+            final String second = getString(secondBytes);
+            final String third = getString(thirdBytes);
+            if (isMessage) {
+                onMessage(second, third);
+            } else {
+                final byte[] messageBytes = (byte[]) reply.get(3);
+                final String message = getString(messageBytes);
+                onPMessage(second, third, message);
+            }
             return true;
         }
         return false;
