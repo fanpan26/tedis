@@ -78,4 +78,28 @@ public class Tedis  implements TedisCommands {
     public void pSubscribe(TedisPubSub pubSub, String... channelPatterns) {
         pubSub.proceedPatterns(client, channelPatterns);
     }
+
+    @Override
+    public long incr(String key) {
+        client.incr(key);
+        return client.getLongReply();
+    }
+
+    @Override
+    public long incrBy(String key, long value) {
+        client.incrBy(key, value);
+        return client.getLongReply();
+    }
+
+    @Override
+    public long decr(String key) {
+        client.decr(key);
+        return client.getLongReply();
+    }
+
+    @Override
+    public long decrBy(String key, long value) {
+        client.decrBy(key, value);
+        return client.getLongReply();
+    }
 }

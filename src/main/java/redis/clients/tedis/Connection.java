@@ -77,12 +77,17 @@ public class Connection implements Closeable {
         return getBulkReply();
     }
 
-    public int getIntegerReply() {
+    public Integer getIntegerReply() {
+       Long value = getLongReply();
+       return value == null ? null : value.intValue();
+    }
+
+    public Long getLongReply() {
         TedisPacket packet = getReponse();
         if (packet == null) {
-            return -1;
+            return null;
         }
-        return packet.hasBody() ? BufferReader.bytes2Int(packet.getBody()) : -1;
+        return packet.hasLongValue() ? packet.getLongValue() : null;
     }
 
     public String getBulkReply() {
@@ -93,12 +98,14 @@ public class Connection implements Closeable {
         return packet.hasBody() ? SafeEncoder.encode(packet.getBody()) : null;
     }
 
-
-
     private TedisPacket getReponse() {
         for (; ; ) {
             try {
-                return QueueFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
+                TedisPacket result = QueueFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
+                if (result == null) {
+                    throw new TedisException("get response time out");
+                }
+                return result;
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 return null;

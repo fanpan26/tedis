@@ -9,4 +9,8 @@ public interface Commands {
     void unSubscribe(final String... channels);
     void pSubscribe(final String... channelPatterns);
     void pUnSubscribe(final String... channelPatterns);
+    void incr(final String key);
+    void decr(final String key);
+    void incrBy(final String key,long value);
+    void decrBy(final String key,long value);
 }

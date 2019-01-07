@@ -15,8 +15,8 @@ public final class Protocol {
 
     public static final byte CR = '\r';
     public static final byte LF = '\n';
-    //响应超时时间，2000ms
-    public static final long DEFAULT_RESPONSE_TIMEOUT = 2000L;
+
+    public static final long DEFAULT_RESPONSE_TIMEOUT = 5000L;
 
     public static byte[] buildCommandBody(final ProtocolCommand cmd,String... args) {
         StringBuilder builder = new StringBuilder();

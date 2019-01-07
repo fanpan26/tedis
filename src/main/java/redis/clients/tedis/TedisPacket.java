@@ -22,6 +22,19 @@ public class TedisPacket extends Packet {
     private List<Object> objects;
 
     private byte[] body;
+
+    private boolean longValue=false;
+    public boolean hasLongValue() {
+        return longValue;
+    }
+    private long value;
+    public void setLongValue(long value) {
+        this.value = value;
+        longValue = true;
+    }
+    public  long getLongValue() {
+        return value;
+    }
     /**
      * @return the body
      */

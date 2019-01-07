@@ -3,13 +3,13 @@ package redis.clients.tedis;
 
 import static redis.clients.tedis.Command.*;
 
-public class Client extends Connection implements Commands{
-    public Client(){
+public class Client extends Connection implements Commands {
+    public Client() {
         super();
     }
 
-    public Client(final String host,final int port){
-        super(host,port);
+    public Client(final String host, final int port) {
+        super(host, port);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class Client extends Connection implements Commands{
     }
 
     @Override
-    public void set(final String key,final String value) {
+    public void set(final String key, final String value) {
         sendCommand(Command.SET, key, value);
     }
 
@@ -38,23 +38,23 @@ public class Client extends Connection implements Commands{
     }
 
     @Override
-    public void  ping(){
+    public void ping() {
         sendCommand(PING);
     }
 
     @Override
     public void publish(final String channel, final String message) {
-        sendCommand(Command.PUBLISH,channel,message);
+        sendCommand(Command.PUBLISH, channel, message);
     }
 
     @Override
     public void subscribe(final String... channels) {
-        sendCommand(SUBSCRIBE,channels);
+        sendCommand(SUBSCRIBE, channels);
     }
 
     @Override
     public void unSubscribe(String... channels) {
-        sendCommand(UNSUBSCRIBE,channels);
+        sendCommand(UNSUBSCRIBE, channels);
     }
 
     @Override
@@ -64,6 +64,26 @@ public class Client extends Connection implements Commands{
 
     @Override
     public void pUnSubscribe(String... channelPatterns) {
-        sendCommand(PUNSUBSCRIBE,channelPatterns);
+        sendCommand(PUNSUBSCRIBE, channelPatterns);
+    }
+
+    @Override
+    public void incr(final String key) {
+        sendCommand(INCR, key);
+    }
+
+    @Override
+    public void decr(final String key) {
+        sendCommand(DECR, key);
+    }
+
+    @Override
+    public void incrBy(final String key, long value) {
+        sendCommand(INCRBY, key, String.valueOf(value));
+    }
+
+    @Override
+    public void decrBy(final String key, long value) {
+        sendCommand(DECRBY, key, String.valueOf(value));
     }
 }

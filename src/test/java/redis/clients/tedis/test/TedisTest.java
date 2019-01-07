@@ -1,19 +1,52 @@
 package redis.clients.tedis.test;
 
-import org.tio.utils.SystemTimer;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import redis.clients.tedis.Tedis;
 
 public class TedisTest {
-    public static void main(String[] args) {
-        Tedis tedis = new Tedis("192.168.1.225", 6379);
-        tedis.set("panzi", "213456");
 
-        long start = SystemTimer.currentTimeMillis();
-        for (int i = 0; i < 200; i++) {
-            tedis.set("panzi", "123456");
-        }
-        long end = SystemTimer.currentTimeMillis();
+    private Tedis tedis;
 
-        System.out.println("循环200遍共用时："+(end-start)+"ms,平均："+(float)(end-start)/200+"ms");
+    @Before
+    public void before() {
+        tedis = new Tedis("192.168.1.225", 6379);
+    }
+
+    @Test
+    public void set() {
+        String result = tedis.set("test", "test");
+        Assert.assertEquals("OK", result);
+    }
+
+    @Test
+    public void get(){
+        String result = tedis.get("test");
+        Assert.assertEquals("test", result);
+    }
+
+    @Test
+    public void incr(){
+        long res = tedis.incr("incr_key");
+        Assert.assertEquals(true,res>0);
+    }
+
+    @Test
+    public void incrBy(){
+        long res = tedis.incrBy("incr_key_by",10);
+        Assert.assertEquals(true,res>=10);
+    }
+
+    @Test
+    public void decr(){
+        long res = tedis.decr("decr_key");
+        Assert.assertEquals(true,res<0);
+    }
+
+    @Test
+    public void decrBy(){
+        long res = tedis.decrBy("decr_key_by",10);
+        Assert.assertEquals(true,res<=-10);
     }
 }

@@ -75,7 +75,9 @@ public class BufferReader {
         if (!endFlag) {
             return null;
         }
-        return body;
+        byte[] resBody = new byte[i];
+        System.arraycopy(body, 0, resBody, 0, i);
+        return resBody;
     }
 
     /**
@@ -164,7 +166,7 @@ public class BufferReader {
             case Protocol.ASTERISK_BYTE:
                 return buildPacket((List<Object>) readMulityLineBody(buffer));
             case Protocol.COLON_BYTE:
-                return buildPacket((int) readIntegerBody(buffer));
+                return buildPacket(readLongCrLf(buffer));
         }
         //其他情况直接return null，需要确保每种情况解析正确
         return null;
@@ -177,8 +179,10 @@ public class BufferReader {
         return new TedisPacket(body);
     }
 
-    private static TedisPacket buildPacket(int value) {
-       return buildPacket(int2Bytes(value));
+    private static TedisPacket buildPacket(long value) {
+        TedisPacket packet = new TedisPacket();
+        packet.setLongValue(value);
+        return packet;
     }
 
     private static TedisPacket buildPacket(List<Object> reply) {

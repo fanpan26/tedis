@@ -1,30 +1,23 @@
 package redis.clients.tedis;
 
 public interface TedisCommands {
-    /**
-     * 设置缓存
-     * */
-    String set(String key,String value);
-    /**
-     * 获取缓存
-     * */
+    String set(String key, String value);
+
     String get(String key);
 
-    /**
-     * ping
-     * */
     String ping();
 
-    /**
-     * 发布
-     * */
-    int publish(final String channel,final String message);
-    /**
-     * 订阅
-     * */
+    int publish(final String channel, final String message);
+
     void subscribe(TedisPubSub pubSub, final String... channels);
-    /**
-     * 模式订阅
-     * */
-    void pSubscribe(TedisPubSub pubSub,final String... channelPatterns);
+
+    void pSubscribe(TedisPubSub pubSub, final String... channelPatterns);
+
+    long incr(final String key);
+
+    long incrBy(final String key, long value);
+
+    long decr(final String key);
+
+    long decrBy(final String key, long value);
 }
