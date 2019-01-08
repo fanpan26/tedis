@@ -106,7 +106,7 @@ public class Tedis  implements TedisCommands {
     @Override
     public boolean del(String key) {
         client.del(key);
-        return client.getIntegerReply() == 0;
+        return client.getIntegerReply() > 0;
     }
 
     @Override
