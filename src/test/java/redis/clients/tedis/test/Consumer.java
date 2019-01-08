@@ -17,3 +17,5 @@ public class Consumer {
         System.out.println("已经订阅news.sports");
     }
 }
+
+

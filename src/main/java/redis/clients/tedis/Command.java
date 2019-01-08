@@ -32,4 +32,8 @@ public enum Command implements ProtocolCommand{
         return name;
     }
 
+    @Override
+    public byte[] getRaw() {
+        return raw;
+    }
 }

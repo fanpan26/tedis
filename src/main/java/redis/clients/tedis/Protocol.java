@@ -1,6 +1,8 @@
 package redis.clients.tedis;
 
 
+import java.io.IOException;
+
 public final class Protocol {
 
     public static final byte DOLLAR_BYTE = '$';
@@ -46,6 +48,33 @@ public final class Protocol {
         }
         //最后转换为 byte[],此处使用  Jedis 中的 SafeEncoder
         return SafeEncoder.encode(builder.toString());
+
+    }
+
+    private static TedisOutputStream os = new TedisOutputStream();
+
+    public static byte[] buildCommandBodyWithOutputStream(final ProtocolCommand cmd,String... args) {
+        byte[] command = cmd.getRaw();
+        byte[][] byteArgs = new byte[args.length][];
+        for (int i = 0; i < args.length; i++) {
+            byteArgs[i] = SafeEncoder.encode(args[i]);
+        }
+
+        os.write(ASTERISK_BYTE);
+        os.writeIntCrLf(args.length + 1);
+        os.write(DOLLAR_BYTE);
+        os.writeIntCrLf(command.length);
+        os.write(command);
+        os.writeCrLf();
+
+        for (final byte[] arg : byteArgs) {
+            os.write(DOLLAR_BYTE);
+            os.writeIntCrLf(arg.length);
+            os.write(arg);
+            os.writeCrLf();
+        }
+
+       return os.getByte();
 
     }
 

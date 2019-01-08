@@ -76,6 +76,7 @@ public class Connection implements Closeable {
 
     public void sendCommand(final ProtocolCommand cmd, final String... args) {
         send(Protocol.buildCommandBody(cmd, args));
+        //send( Protocol.buildCommandBodyWithOutputStream(cmd,args));
     }
 
     public String getStatusCodeReply() {
