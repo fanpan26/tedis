@@ -13,7 +13,7 @@ public class Producer {
     public static void main(String[] args) {
         Tedis tedisPublish =  new Tedis("192.168.1.225", 6379);
         //tedisPublish.publish("channel1","welcome to NBA");
-        tedisPublish.publish("news.country","中文不支持吗？");
+        tedisPublish.publish("news.sports","中文不支持吗？");
 
     }
 }

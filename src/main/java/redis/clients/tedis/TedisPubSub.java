@@ -3,6 +3,7 @@ package redis.clients.tedis;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static redis.clients.tedis.Keyword.*;
 
@@ -60,29 +61,32 @@ public abstract class TedisPubSub {
     }
 
     private void process() {
-        do {
-            List<Object> reply = client.getSubscribeReply();
-            if (reply != null && !reply.isEmpty()) {
-                final Object firstObj = reply.get(0);
-                final byte[] resp = (byte[]) firstObj;
-                boolean handled = handleSubscribe(resp, reply);
+        Executors.newCachedThreadPool().execute(() -> {
+            do {
+                List<Object> reply = client.getSubscribeReply();
+                if (reply != null && !reply.isEmpty()) {
+                    final Object firstObj = reply.get(0);
+                    final byte[] resp = (byte[]) firstObj;
+                    boolean handled = handleSubscribe(resp, reply);
 
-                if (handled) {
-                    continue;
-                }
+                    if (handled) {
+                        continue;
+                    }
 
-                handled = handleMessage(resp, reply);
-                if (handled) {
-                    continue;
+                    handled = handleMessage(resp, reply);
+                    if (handled) {
+                        continue;
+                    }
+                    handleUnSubscribe(resp, reply);
                 }
-                handleUnSubscribe(resp, reply);
+            } while (isSubscribed());
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } while (isSubscribed());
-        try {
-            client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
+
     }
 
     private boolean handleSubscribe(byte[] resp,List<Object> reply){
