@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TedisPacket extends Packet {
 
-    public boolean isSubscribeBody() {
+    public boolean hasListValue() {
         return objects != null && !objects.isEmpty();
     }
 
@@ -23,17 +23,30 @@ public class TedisPacket extends Packet {
 
     private byte[] body;
 
-    private boolean longValue=false;
+    private boolean longValue = false;
+
     public boolean hasLongValue() {
         return longValue;
     }
+
     private long value;
+
     public void setLongValue(long value) {
         this.value = value;
         longValue = true;
     }
-    public  long getLongValue() {
+
+    public long getLongValue() {
         return value;
+    }
+
+    private boolean err;
+    public void setErr(){
+        this.err = true;
+    }
+
+    public boolean hasErr(){
+        return this.err;
     }
     /**
      * @return the body
@@ -59,8 +72,10 @@ public class TedisPacket extends Packet {
         return emptyPacket;
     }
 
-    public TedisPacket(){}
-    public TedisPacket(byte[] body){
+    public TedisPacket() {
+    }
+
+    public TedisPacket(byte[] body) {
         setBody(body);
     }
 }

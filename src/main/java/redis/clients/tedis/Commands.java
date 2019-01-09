@@ -16,4 +16,5 @@ public interface Commands {
     void exists(final String key);
     void del(final String key);
     void quit();
+    void flush();
 }

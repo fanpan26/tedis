@@ -69,4 +69,13 @@ public interface TedisCommands {
      * RESPONSE:[+OK]
      * */
     void quit();
+    /**
+     * REQUEST:[FLUSHDB]
+     * RESPONSE:[+OK]
+     * */
+    void flush();
+    /**
+     * 通过lua实现分布式锁
+     * */
+    TedisLock getLock(final String lockKey);
 }

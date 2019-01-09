@@ -3,9 +3,23 @@ package redis.clients.tedis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Tedis  implements TedisCommands {
+import java.util.List;
+
+public class Tedis  implements TedisCommands,ScriptingCommands {
 
     private static Logger logger = LoggerFactory.getLogger(Tedis.class);
+
+    private static final String lockScript = "if(redis.call('exists',KEYS[1])==0) then "+
+            "redis.call('hset',KEYS[1],ARGV[2],1); "+
+            "redis.call('pexpire',KEYS[1],ARGV[1]); "+
+            "return nil; "+
+            "end; "+
+            "if(redis.call('hexists',KEYS[1],ARGV[2])==1) then "+
+            "redis.call('hincrby',KEYS[1],ARGV[2],1); "+
+            "redis.call('pexpire',KEYS[1],ARGV[1]);"+
+            "return nil;"+
+            "end; "+
+            "return redis.call('pttl',KEYS[1]);";
 
     private Client client;
 
@@ -119,5 +133,72 @@ public class Tedis  implements TedisCommands {
         client.quit();
         client.getStatusCodeReply();
         client.disconnect();
+    }
+
+    @Override
+    public void flush(){
+        client.flush();
+        client.getStatusCodeReply();
+    }
+
+    /**
+     * 通过lua实现分布式锁
+     *
+     * @param lockKey
+     */
+    @Override
+    public TedisLock getLock(String lockKey) {
+        Object result = client.eval(lockScript, 1, lockKey, "30000", client.getClientName());
+        boolean success = result == null;
+        if(success) {
+            return new DefaultTedisLock(this);
+        }
+        return null;
+    }
+
+
+    @Override
+    public Boolean scriptExists(String sha1) {
+        return client.scriptExists(sha1);
+    }
+
+    @Override
+    public List<Boolean> scriptExists(String... sha1) {
+       return client.scriptExists(sha1);
+    }
+
+    @Override
+    public Object eval(String script) {
+        return client.eval(script);
+    }
+
+    @Override
+    public Object eval(String script, List<String> keys, List<String> args) {
+        return client.eval(script,keys,args);
+    }
+
+    @Override
+    public Object eval(String script, int keyCount, String... params) {
+        return client.eval(script,keyCount,params);
+    }
+
+    @Override
+    public Object evalsha(String sha1) {
+        return client.evalsha(sha1);
+    }
+
+    @Override
+    public Object evalsha(String sha1, List<String> keys, List<String> args) {
+        return client.evalsha(sha1,keys,args);
+    }
+
+    @Override
+    public Object evalsha(String sha1, int keyCount, String... params) {
+        return client.evalsha(sha1,keyCount,params);
+    }
+
+    @Override
+    public String scriptLoad(String script) {
+        return client.scriptLoad(script);
     }
 }

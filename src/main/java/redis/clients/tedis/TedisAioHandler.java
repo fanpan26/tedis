@@ -48,7 +48,7 @@ public class TedisAioHandler implements ClientAioHandler {
      */
     @Override
     public Packet decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
-        //debug(buffer,position,readableLength);
+        debug(buffer,position,readableLength);
         return BufferReader.decode(buffer, limit, position);
     }
 
@@ -94,11 +94,7 @@ public class TedisAioHandler implements ClientAioHandler {
     public void handler(Packet packet, ChannelContext channelContext) throws Exception {
         TedisPacket responsePacket = (TedisPacket) packet;
         if (responsePacket != null) {
-            if (responsePacket.isSubscribeBody()) {
-                QueueFactory.get(subscribeId).put(responsePacket);
-            } else {
-                QueueFactory.get(clientName).put(responsePacket);
-            }
+            QueueFactory.get(clientName).put(responsePacket);
         }
     }
 }

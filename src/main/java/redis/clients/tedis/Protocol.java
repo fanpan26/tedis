@@ -1,8 +1,5 @@
 package redis.clients.tedis;
 
-
-import java.io.IOException;
-
 public final class Protocol {
 
     public static final byte DOLLAR_BYTE = '$';

@@ -104,12 +104,35 @@ public class Connection implements Closeable {
         return packet.hasBody() ? SafeEncoder.encode(packet.getBody()) : null;
     }
 
+    public Object getEvalReply() {
+        TedisPacket packet = getReponse();
+        if (packet == null) {
+            return null;
+        }
+        if (packet.hasBody()) {
+            if (packet.getBody().length == 0) {
+                return null;
+            }
+            return SafeEncoder.encode(packet.getBody());
+        }
+        if (packet.hasLongValue()) {
+            return packet.getLongValue();
+        }
+        if (packet.hasListValue()) {
+            return packet.getObjects();
+        }
+        return null;
+    }
+
     private TedisPacket getReponse() {
         for (; ; ) {
             try {
                 TedisPacket result = QueueFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
                 if (result == null) {
                     throw new TedisException("get response time out");
+                }
+                if(result.hasErr()) {
+                    throw new TedisException(SafeEncoder.encode(result.getBody()));
                 }
                 return result;
             } catch (InterruptedException e) {
@@ -119,14 +142,14 @@ public class Connection implements Closeable {
         }
     }
 
-    public List<Object> getSubscribeReply(){
+    public List<Object> getSubscribeReply() {
         for (; ; ) {
             try {
-                TedisPacket packet =  QueueFactory.get(getSubscribeId()).take();
-                if(packet == null){
+                TedisPacket packet = QueueFactory.get(clientName).take();
+                if (packet == null) {
                     return null;
                 }
-               return packet.getObjects();
+                return packet.getObjects();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 return null;

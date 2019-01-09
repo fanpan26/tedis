@@ -8,10 +8,12 @@ import redis.clients.tedis.Tedis;
 public class TedisTest {
 
     private Tedis tedis;
+    private Tedis tedis1;
 
     @Before
     public void before() {
         tedis = new Tedis("192.168.1.225", 6379);
+        tedis1=new Tedis("192.168.1.225", 6379);
     }
 
     @Test
@@ -73,4 +75,21 @@ public class TedisTest {
         tedis.ping();
         tedis.quit();
     }
+
+    @Test
+    public void eval(){
+        String res = (String)tedis.eval("return 'hello world'");
+        Assert.assertTrue("hello world".equals(res));
+    }
+
+    @Test
+    public void getLock() {
+        tedis.getLock("myLockKey");
+    }
+
+    @Test
+    public void flush(){
+        tedis.flush();
+    }
+
 }

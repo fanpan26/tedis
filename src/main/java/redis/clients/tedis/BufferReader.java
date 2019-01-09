@@ -87,7 +87,7 @@ public class BufferReader {
     private static Object readFixedLengthBody(ByteBuffer buffer) throws AioDecodeException {
         int bodyLength = readIntCrLf(buffer);
         if (bodyLength == -1) {
-            return TedisPacket.Empty();
+            return new byte[0];
         }
 
         //剩下的长度不够解析body，返回null，等待下次解析
@@ -162,7 +162,7 @@ public class BufferReader {
             case Protocol.DOLLAR_BYTE:
                 return buildPacket((byte[]) readFixedLengthBody(buffer));
             case Protocol.MINUS_BYTE:
-                break;
+                return errorPacket(buffer,limit,position);
             case Protocol.ASTERISK_BYTE:
                 return buildPacket((List<Object>) readMulityLineBody(buffer));
             case Protocol.COLON_BYTE:
@@ -170,6 +170,17 @@ public class BufferReader {
         }
         //其他情况直接return null，需要确保每种情况解析正确
         return null;
+    }
+
+    private static TedisPacket errorPacket(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+        byte[] res = (byte[]) readSingleLineBody(buffer, limit, position);
+        if (res == null) {
+            return null;
+        }
+        TedisPacket packet = new TedisPacket();
+        packet.setErr();
+        packet.setBody(res);
+        return packet;
     }
 
     private static TedisPacket buildPacket(byte[] body) {
@@ -186,28 +197,15 @@ public class BufferReader {
     }
 
     private static TedisPacket buildPacket(List<Object> reply) {
-        if(reply == null || reply.isEmpty()){
+        if (reply == null || reply.isEmpty()) {
             return null;
         }
         final Object firstObj = reply.get(0);
 
         final byte[] resp = (byte[]) firstObj;
-
-        if (Arrays.equals(SUBSCRIBE.raw, resp)
-                || Arrays.equals(UNSUBSCRIBE.raw, resp)
-                || Arrays.equals(MESSAGE.raw, resp)
-                || Arrays.equals(PMESSAGE.raw, resp)
-                || Arrays.equals(PSUBSCRIBE.raw, resp)
-                || Arrays.equals(PUNSUBSCRIBE.raw, resp)
-                || Arrays.equals(PONG.raw, resp)) {
-
-            TedisPacket subscribePacket = new TedisPacket();
-            subscribePacket.setObjects(reply);
-            return subscribePacket;
-        }else {
-            //待续
-            return new TedisPacket();
-        }
+        TedisPacket subscribePacket = new TedisPacket();
+        subscribePacket.setObjects(reply);
+        return subscribePacket;
     }
 
     public static byte[] int2Bytes(int value) {
