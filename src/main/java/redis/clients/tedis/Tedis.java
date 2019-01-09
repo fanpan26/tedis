@@ -9,26 +9,21 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     private static Logger logger = LoggerFactory.getLogger(Tedis.class);
 
-    private static final String lockScript = "if(redis.call('exists',KEYS[1])==0) then "+
-            "redis.call('hset',KEYS[1],ARGV[2],1); "+
-            "redis.call('pexpire',KEYS[1],ARGV[1]); "+
-            "return nil; "+
-            "end; "+
-            "if(redis.call('hexists',KEYS[1],ARGV[2])==1) then "+
-            "redis.call('hincrby',KEYS[1],ARGV[2],1); "+
-            "redis.call('pexpire',KEYS[1],ARGV[1]);"+
-            "return nil;"+
-            "end; "+
-            "return redis.call('pttl',KEYS[1]);";
+    private TedisLock tedisLock;
 
     private Client client;
 
     public Tedis() {
-        client = new Client();
+       this(null,0);
     }
 
     public Tedis(final String host, final int port) {
-        client = new Client(host, port);
+        if (host == null || port == 0) {
+            client = new Client();
+        } else {
+            client = new Client(host, port);
+        }
+        tedisLock = new DefaultTedisLock(client);
     }
 
     /**
@@ -148,14 +143,8 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
      */
     @Override
     public TedisLock getLock(String lockKey) {
-        Object result = client.eval(lockScript, 1, lockKey, "30000", client.getClientName());
-        boolean success = result == null;
-        if(success) {
-            return new DefaultTedisLock(this);
-        }
-        return null;
+        return tedisLock.getLock(lockKey);
     }
-
 
     @Override
     public Boolean scriptExists(String sha1) {

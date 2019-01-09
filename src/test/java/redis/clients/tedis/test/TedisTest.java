@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import redis.clients.tedis.Tedis;
+import redis.clients.tedis.TedisLock;
 
 public class TedisTest {
 
@@ -84,7 +85,21 @@ public class TedisTest {
 
     @Test
     public void getLock() {
-        tedis.getLock("myLockKey");
+        TedisLock lock = tedis.getLock("myLockKey");
+        if (lock != null) {
+            System.out.println("获取锁成功");
+        }
+
+        boolean success = false;
+        while (!success) {
+            TedisLock lock1 = tedis1.getLock("myLockKey");
+            if (lock1 != null) {
+                System.out.println("获取锁成功");
+                success = true;
+            } else {
+                System.out.println("获取锁失败");
+            }
+        }
     }
 
     @Test
