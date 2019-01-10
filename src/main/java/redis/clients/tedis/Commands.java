@@ -17,4 +17,9 @@ public interface Commands {
     void del(final String key);
     void quit();
     void flush();
+    void selectDb(int db);
+    void expire(final String key,long seconds);
+    void expireAt(final String key,long timestamp);
+    void pexpire(final String key,long milliseconds);
+    void pexpireAt(final String key,long timestamp);
 }

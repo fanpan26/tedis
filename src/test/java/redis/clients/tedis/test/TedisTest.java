@@ -78,33 +78,103 @@ public class TedisTest {
     }
 
     @Test
+    public void selectDb(){
+       String result = tedis.selectDb(1);
+       Assert.assertTrue("OK".equals(result));
+    }
+
+    @Test
     public void eval(){
         String res = (String)tedis.eval("return 'hello world'");
         Assert.assertTrue("hello world".equals(res));
     }
 
-    @Test
-    public void getLock() {
-        TedisLock lock = tedis.getLock("myLockKey");
-        if (lock != null) {
-            System.out.println("获取锁成功");
-        }
-
-        boolean success = false;
-        while (!success) {
-            TedisLock lock1 = tedis1.getLock("myLockKey");
-            if (lock1 != null) {
-                System.out.println("获取锁成功");
-                success = true;
-            } else {
-                System.out.println("获取锁失败");
-            }
-        }
-    }
+//    @Test
+//    public void getLock() {
+//        TedisLock lock = tedis.getLock("myLockKey");
+//        if (lock != null) {
+//            System.out.println("获取锁成功");
+//        }
+//
+//        boolean success = false;
+//        while (!success) {
+//            TedisLock lock1 = tedis1.getLock("myLockKey");
+//            if (lock1 != null) {
+//                System.out.println("获取锁成功");
+//                success = true;
+//            } else {
+//                System.out.println("获取锁失败");
+//            }
+//        }
+//    }
 
     @Test
     public void flush(){
         tedis.flush();
+    }
+
+    @Test
+    public void expire() {
+        String key = "test_expire";
+        tedis.set(key, "value");
+        boolean expired = tedis.expire(key, 3);
+        Assert.assertTrue(expired);
+
+        try {
+            Thread.sleep(3000);
+        }catch (InterruptedException ex){
+
+        }
+        String value = tedis.get(key);
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void pexpire() {
+        String key = "test_pexpire";
+        tedis.set(key, "value");
+        boolean expired = tedis.pexpire(key, 3000);
+        Assert.assertTrue(expired);
+
+        try {
+            Thread.sleep(3000);
+        }catch (InterruptedException ex){
+
+        }
+        String value = tedis.get(key);
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void expireAt(){
+        String key = "test_expireAt";
+        tedis.set(key, "value");
+        boolean expired = tedis.expireAt(key, System.currentTimeMillis()/1000+3);
+        Assert.assertTrue(expired);
+
+        try {
+            Thread.sleep(3000);
+        }catch (InterruptedException ex){
+
+        }
+        String value = tedis.get(key);
+        Assert.assertEquals(null, value);
+    }
+
+    @Test
+    public void pexpireAt(){
+        String key = "test_expireAt";
+        tedis.set(key, "value");
+        boolean expired = tedis.expireAt(key, System.currentTimeMillis()/1000+3000);
+        Assert.assertTrue(expired);
+
+        try {
+            Thread.sleep(3000);
+        }catch (InterruptedException ex){
+
+        }
+        String value = tedis.get(key);
+        Assert.assertEquals(null, value);
     }
 
 }

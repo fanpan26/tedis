@@ -19,3 +19,4 @@
 * 2019-1-7 DECRBY, DECR, INCRBY, INCR 命令，修复解析字符串多余byte（0）的bug
 * 2019-1-7 补全所有命令（但未实现）
 * 2019-1-9 EVAL 命令
+* 2019-1-10 EXPIRE,PEXPIRE,EXPIREAT,PEXPIREAT 命令

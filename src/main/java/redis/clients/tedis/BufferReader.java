@@ -80,6 +80,7 @@ public class BufferReader {
         return resBody;
     }
 
+    private static final byte[] EMPTY_BYTES = new byte[0];
     /**
      * 服务器响应信息解析
      * $号开头，例如 $5\r\nredis\r\n
@@ -87,7 +88,7 @@ public class BufferReader {
     private static Object readFixedLengthBody(ByteBuffer buffer) throws AioDecodeException {
         int bodyLength = readIntCrLf(buffer);
         if (bodyLength == -1) {
-            return new byte[0];
+            return EMPTY_BYTES;
         }
 
         //剩下的长度不够解析body，返回null，等待下次解析
@@ -184,8 +185,11 @@ public class BufferReader {
     }
 
     private static TedisPacket buildPacket(byte[] body) {
-        if(body == null){
+        if (body == null) {
             return null;
+        }
+        if (body.length == 0) {
+            return TedisPacket.Empty();
         }
         return new TedisPacket(body);
     }

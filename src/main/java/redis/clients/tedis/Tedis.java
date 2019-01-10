@@ -147,6 +147,36 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
+    public String selectDb(int db) {
+        client.selectDb(db);
+        return client.getStatusCodeReply();
+    }
+
+    @Override
+    public boolean expire(String key, long seconds) {
+        client.expire(key, seconds);
+        return client.getIntegerReply() > 0;
+    }
+
+    @Override
+    public boolean pexpire(String key, long milliseconds) {
+        client.pexpire(key, milliseconds);
+        return client.getIntegerReply() > 0;
+    }
+
+    @Override
+    public boolean expireAt(String key, long timestamp) {
+        client.expireAt(key, timestamp);
+        return client.getIntegerReply() > 0;
+    }
+
+    @Override
+    public boolean pexpireAt(String key, long timestamp) {
+        client.pexpireAt(key, timestamp);
+        return client.getIntegerReply() > 0;
+    }
+
+    @Override
     public Boolean scriptExists(String sha1) {
         return client.scriptExists(sha1);
     }

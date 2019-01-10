@@ -110,6 +110,31 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
+    public void selectDb(int db) {
+        sendCommand(SELECT,db);
+    }
+
+    @Override
+    public void expire(String key, long seconds) {
+        sendCommand(EXPIRE,key,seconds);
+    }
+
+    @Override
+    public void expireAt(String key, long timestamp) {
+        sendCommand(EXPIREAT,key,timestamp);
+    }
+
+    @Override
+    public void pexpire(String key, long milliseconds) {
+        sendCommand(PEXPIRE,key,milliseconds);
+    }
+
+    @Override
+    public void pexpireAt(String key, long timestamp) {
+        sendCommand(PEXPIREAT,key,timestamp);
+    }
+
+    @Override
     public Boolean scriptExists(String sha1) {
         return null;
     }

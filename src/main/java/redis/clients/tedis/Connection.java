@@ -74,6 +74,13 @@ public class Connection implements Closeable {
         }
     }
 
+    public void sendCommand(final ProtocolCommand cmd,int arg) {
+        sendCommand(cmd, String.valueOf(arg));
+    }
+
+    public void sendCommand(final ProtocolCommand cmd,String key,long arg) {
+        sendCommand(cmd,key,String.valueOf(arg));
+    }
     public void sendCommand(final ProtocolCommand cmd, final String... args) {
         send(Protocol.buildCommandBody(cmd, args));
         //send( Protocol.buildCommandBodyWithOutputStream(cmd,args));

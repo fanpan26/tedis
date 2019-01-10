@@ -1,5 +1,7 @@
 package redis.clients.tedis;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public class DefaultTedisLock implements TedisLock {
 
     private static final String lockScript = "if(redis.call('exists',KEYS[1])==0) then "+
@@ -25,7 +27,9 @@ public class DefaultTedisLock implements TedisLock {
 
     @Override
     public TedisLock getLock(final String lockKey){
-       Object result = client.eval(lockScript, 1, lockKey, String.valueOf(DEFAULT_LOCK_TIME), client.getClientName());
+        ReentrantLock lock =  new ReentrantLock();
+        lock.lock();
+       Object result = client.eval(lockScript, 1, lockKey, String.valueOf(DEFAULT_LOCK_TIME), Thread.currentThread().getId()+ client.getClientName());
        if(result == null){
            return this;
        }
