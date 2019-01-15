@@ -40,6 +40,76 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
+    public void get(String key, int start, int end) {
+        sendCommand(GETRANGE, key, String.valueOf(start), String.valueOf(end));
+    }
+
+    @Override
+    public void get(String... keys){
+        sendCommand(MGET,keys);
+    }
+
+    @Override
+    public void setex(String key, String value, long seconds) {
+        sendCommand(SETEX, key, String.valueOf(seconds), value);
+    }
+
+    @Override
+    public void psetex(String key,String value,long milliseconds){
+        sendCommand(PSETEX,key,String.valueOf(milliseconds),value);
+    }
+
+    @Override
+    public void setnx(String key, String value) {
+        sendCommand(SETNX,key,value);
+    }
+
+    @Override
+    public void msetnx(String... kvs){
+        sendCommand(MSETNX,kvs);
+    }
+
+    @Override
+    public void setrange(String key, long offset, String value) {
+        sendCommand(SETRANGE,key,String.valueOf(offset),value);
+    }
+
+    @Override
+    public void strlen(String key) {
+        sendCommand(STRLEN,key);
+    }
+
+    @Override
+    public void incrByfloat(String key,float value) {
+        sendCommand(INCRBYFLOAT, key, String.valueOf(value));
+    }
+
+    @Override
+    public void append(String key,String value){
+        sendCommand(APPEND,key,value);
+    }
+
+    @Override
+    public void mset(String... kvs) {
+        sendCommand(MSET,kvs);
+    }
+
+    @Override
+    public void getset(String key, String value) {
+        sendCommand(GETSET,key,value);
+    }
+
+    @Override
+    public void getbit(String key, int offset) {
+        sendCommand(GETBIT,key,offset);
+    }
+
+    @Override
+    public void setbit(String key, int offset,int value) {
+        sendCommand(SETBIT, key, offset, value);
+    }
+
+    @Override
     public void ping() {
         sendCommand(PING);
     }

@@ -13,6 +13,7 @@ import org.tio.core.intf.Packet;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -81,6 +82,11 @@ public class Connection implements Closeable {
     public void sendCommand(final ProtocolCommand cmd,String key,long arg) {
         sendCommand(cmd,key,String.valueOf(arg));
     }
+
+    public void sendCommand(final ProtocolCommand cmd,String key,long arg1,long arg2) {
+        sendCommand(cmd,key,String.valueOf(arg1),String.valueOf(arg2));
+    }
+
     public void sendCommand(final ProtocolCommand cmd, final String... args) {
         send(Protocol.buildCommandBody(cmd, args));
         //send( Protocol.buildCommandBodyWithOutputStream(cmd,args));
@@ -93,6 +99,14 @@ public class Connection implements Closeable {
     public Integer getIntegerReply() {
        Long value = getLongReply();
        return value == null ? null : value.intValue();
+    }
+
+    public Float getFloatReply(){
+        String result = getBulkReply();
+        if(result != null){
+            return Float.valueOf(result);
+        }
+        return 0.0f;
     }
 
     public Long getLongReply() {
@@ -109,6 +123,29 @@ public class Connection implements Closeable {
             return null;
         }
         return packet.hasBody() ? SafeEncoder.encode(packet.getBody()) : null;
+    }
+
+    public List<String> getListStringReply(){
+        List<Object> replies = getListReply();
+        if(replies == null){
+            return null;
+        }
+        List<String> strReplies = new ArrayList<>();
+        for (Object obj : replies){
+            strReplies.add(String.valueOf(obj));
+        }
+        return strReplies;
+    }
+
+    public List<Object> getListReply(){
+        TedisPacket packet = getReponse();
+        if (packet == null) {
+            return null;
+        }
+        if (packet.hasListValue()) {
+            return packet.getObjects();
+        }
+        return null;
     }
 
     public Object getEvalReply() {
