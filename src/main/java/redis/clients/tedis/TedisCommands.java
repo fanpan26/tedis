@@ -1,6 +1,7 @@
 package redis.clients.tedis;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface TedisCommands {
@@ -20,6 +21,22 @@ public interface TedisCommands {
     int len(String key);
     float incrByfloat(String key,float value);
     int append(String key,String value);
+    int hset(String key,String field,String value);
+    boolean hexists(String key,String field);
+    String hget(String key,String field);
+    boolean hdel(String key,String... fields);
+    Map<String,String> hget(String key);
+    long hincrBy(String key,String field,long value);
+    long hincrBy(String key,String field);
+    float hincrByFloat(String key,String field,float value);
+    float hincrByFloat(String key,String field);
+    List<String> hkeys(String key);
+    int hlen(String key);
+    List<String> hget(String key,String...fields);
+    String hset(String key,List<String> fields,List<String> values);
+    boolean hsetnx(String key,String field,String value);
+    List<String> hvals(String key);
+
     String ping();
     int publish(final String channel, final String message);
     void subscribe(TedisPubSub pubSub, final String... channels);

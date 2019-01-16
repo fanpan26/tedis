@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Tedis  implements TedisCommands,ScriptingCommands {
@@ -110,7 +111,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     @Override
     public boolean setnx(String key, String value) {
         client.setnx(key,value);
-        return client.getIntegerReply() > 0;
+        return client.getBooleanReply();
     }
 
     @Override
@@ -156,6 +157,94 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     public int append(String key,String value){
         client.append(key,value);
         return client.getIntegerReply();
+    }
+
+    @Override
+    public int hset(String key, String field, String value) {
+       client.hset(key,field,value);
+       return client.getIntegerReply();
+    }
+
+    @Override
+    public boolean hexists(String key, String field) {
+        client.hexists(key, field);
+        return client.getBooleanReply();
+    }
+
+    @Override
+    public String hget(String key, String field) {
+        client.hget(key,field);
+        return client.getBulkReply();
+    }
+
+    @Override
+    public boolean hdel(String key, String... fields) {
+       client.hdel(key,fields);
+       return client.getBooleanReply();
+    }
+
+    @Override
+    public Map<String,String> hget(String key) {
+        client.hget(key);
+        return client.getMapReply();
+    }
+
+    @Override
+    public long hincrBy(String key, String field, long value) {
+        client.hincrBy(key,field,value);
+        return client.getLongReply();
+    }
+
+    @Override
+    public long hincrBy(String key, String field) {
+       return hincrBy(key,field,1L);
+    }
+
+    @Override
+    public float hincrByFloat(String key, String field, float value) {
+        client.hincrByFloat(key,field,value);
+        return client.getFloatReply();
+    }
+
+    @Override
+    public float hincrByFloat(String key, String field) {
+        return hincrByFloat(key,field,1.0f);
+    }
+
+    @Override
+    public List<String> hkeys(String key) {
+        client.hkeys(key);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public int hlen(String key) {
+        client.hlen(key);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public List<String> hget(String key, String... fields) {
+        client.hmget(key, fields);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public String hset(String key, List<String> fields, List<String> values) {
+        client.hmset(key, getKeyValues(fields, values));
+        return client.getStatusCodeReply();
+    }
+
+    @Override
+    public boolean hsetnx(String key, String field, String value) {
+        client.hsetnx(key,field,value);
+        return client.getBooleanReply();
+    }
+
+    @Override
+    public List<String> hvals(String key) {
+        client.hvals(key);
+        return client.getListStringReply();
     }
 
     @Override
@@ -236,7 +325,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     @Override
     public boolean exists(String key) {
         client.exists(key);
-        return client.getIntegerReply() > 0;
+        return client.getBooleanReply();
     }
     @Override
     public void quit() {
@@ -266,19 +355,19 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     @Override
     public boolean pexpire(String key, long milliseconds) {
         client.pexpire(key, milliseconds);
-        return client.getIntegerReply() > 0;
+        return client.getBooleanReply();
     }
 
     @Override
     public boolean expireAt(String key, long timestamp) {
         client.expireAt(key, timestamp);
-        return client.getIntegerReply() > 0;
+        return client.getBooleanReply();
     }
 
     @Override
     public boolean pexpireAt(String key, long timestamp) {
         client.pexpireAt(key, timestamp);
-        return client.getIntegerReply() > 0;
+        return client.getBooleanReply();
     }
 
     @Override

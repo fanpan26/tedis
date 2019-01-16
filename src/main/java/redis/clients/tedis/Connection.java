@@ -14,7 +14,9 @@ import org.tio.core.intf.Packet;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -101,6 +103,10 @@ public class Connection implements Closeable {
        return value == null ? null : value.intValue();
     }
 
+    public boolean getBooleanReply() {
+        return getIntegerReply() > 0;
+    }
+
     public Float getFloatReply(){
         String result = getBulkReply();
         if(result != null){
@@ -125,6 +131,15 @@ public class Connection implements Closeable {
         return packet.hasBody() ? SafeEncoder.encode(packet.getBody()) : null;
     }
 
+    public java.util.Map<String,String> getMapReply() {
+        List<String> res = getListStringReply();
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < res.size(); i += 2) {
+            map.put(res.get(i), res.get(i + 1));
+        }
+        return map;
+    }
+
     public List<String> getListStringReply(){
         List<Object> replies = getListReply();
         if(replies == null){
@@ -132,7 +147,11 @@ public class Connection implements Closeable {
         }
         List<String> strReplies = new ArrayList<>();
         for (Object obj : replies){
-            strReplies.add(String.valueOf(obj));
+            if(obj instanceof byte[]){
+                strReplies.add(SafeEncoder.encode((byte[])obj));
+            }else {
+                strReplies.add(String.valueOf(obj));
+            }
         }
         return strReplies;
     }

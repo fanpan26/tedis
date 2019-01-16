@@ -90,6 +90,71 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
+    public void hset(String key, String field, String value) {
+        sendCommand(HSET,key,field,value);
+    }
+
+    @Override
+    public void hexists(String key, String field) {
+        sendCommand(HEXISTS,key,field);
+    }
+
+    @Override
+    public void hget(String key, String field) {
+        sendCommand(HGET,key,field);
+    }
+
+    @Override
+    public void hdel(String key, String... fields) {
+        sendCommand(HDEL, getParams(key,fields));
+    }
+
+    @Override
+    public void hget(String key) {
+        sendCommand(HGETALL,key);
+    }
+
+    @Override
+    public void hincrBy(String key, String field, long value) {
+        sendCommand(HINCRBY, key, field, String.valueOf(value));
+    }
+
+    @Override
+    public void hincrByFloat(String key, String field, float value) {
+        sendCommand(HINCRBYFLOAT,key,field,String.valueOf(value));
+    }
+
+    @Override
+    public void hkeys(String key) {
+        sendCommand(HKEYS,key);
+    }
+
+    @Override
+    public void hlen(String key) {
+        sendCommand(HLEN,key);
+    }
+
+    @Override
+    public void hmget(String key, String... fields) {
+        sendCommand(HMGET,getParams(key,fields));
+    }
+
+    @Override
+    public void hmset(String key, String... kvs) {
+        sendCommand(HMSET,getParams(key,kvs));
+    }
+
+    @Override
+    public void hsetnx(String key, String field, String value) {
+        sendCommand(HSETNX,key,field,value);
+    }
+
+    @Override
+    public void hvals(String key) {
+        sendCommand(HVALS,key);
+    }
+
+    @Override
     public void mset(String... kvs) {
         sendCommand(MSET,kvs);
     }
@@ -275,5 +340,12 @@ public class Client extends Connection implements Commands,ScriptingCommands {
             params[keyCount] = args.get(i);
 
         return params;
+    }
+
+    private String[] getParams(String arg1,String... arg2s){
+        String[] args = new String[arg2s.length + 1];
+        args[0] = arg1;
+        System.arraycopy(arg2s, 0, args, 1, arg2s.length);
+        return args;
     }
 }
