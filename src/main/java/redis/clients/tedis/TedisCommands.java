@@ -36,6 +36,25 @@ public interface TedisCommands {
     String hset(String key,List<String> fields,List<String> values);
     boolean hsetnx(String key,String field,String value);
     List<String> hvals(String key);
+    String blpop(long timeout, String... keys);
+    String brpop(long timeout,String... keys);
+    String brpoplpush(String source,String destination,long timeout);
+    String lindex(String key,int index);
+    int linsertBeofore(String key,String pivot,String value);
+    int linsertAfter(String key,String pivot,String value);
+    int linsert(String key,boolean before,String pivot,String value);
+    long llen(String key);
+    String lpop(String key);
+    int lpush(String key,String... values);
+    int lpushx(String key,String value);
+    List<String> lrange(String key,long start,long end);
+    int lrem(String key,int count,String value);
+    String lset(String key,int index,String value);
+    String ltrim(String key,long start,long end);
+    String rpop(String key);
+    String rpoplpush(String source,String destination);
+    int rpush(String key,String... values);
+    int rpushx(String key,String value);
 
     String ping();
     int publish(final String channel, final String message);
@@ -48,7 +67,7 @@ public interface TedisCommands {
     boolean exists(final String key);
     boolean del(final String key);
     void quit();
-    void flush();
+    String flush();
     String selectDb(int db);
     boolean expire(final String key,long seconds);
     boolean pexpire(final String key,long milliseconds);

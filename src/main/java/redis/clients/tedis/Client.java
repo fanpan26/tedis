@@ -1,6 +1,8 @@
 package redis.clients.tedis;
 
 
+import javafx.scene.chart.ValueAxis;
+
 import java.util.List;
 
 import static redis.clients.tedis.Command.*;
@@ -152,6 +154,91 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     @Override
     public void hvals(String key) {
         sendCommand(HVALS,key);
+    }
+
+    @Override
+    public void blpop(long timeout, String... keys) {
+        sendCommand(BLPOP, keys, timeout);
+    }
+
+    @Override
+    public void brpop(long timeout, String... keys) {
+        sendCommand(BRPOP,keys,timeout);
+    }
+
+    @Override
+    public void brpoplpush(String source, String destination, long timeout) {
+        sendCommand(BRPOPLPUSH,source,destination,String.valueOf(timeout));
+    }
+
+    @Override
+    public void lindex(String key, int index) {
+        sendCommand(LINDEX,key,index);
+    }
+
+    @Override
+    public void linsert(String key, boolean before, String pivot, String value) {
+        sendCommand(LINSERT,key,before?"BEFORE":"AFTER",pivot,value);
+    }
+
+    @Override
+    public void llen(String key) {
+        sendCommand(LLEN,key);
+    }
+
+    @Override
+    public void lpop(String key) {
+        sendCommand(LPOP,key);
+    }
+
+    @Override
+    public void lpush(String key, String... values) {
+        sendCommand(LPUSH, getParams(key, values));
+    }
+
+    @Override
+    public void lpushx(String key, String value) {
+        sendCommand(LPUSHX,key,value);
+    }
+
+    @Override
+    public void lrange(String key, long start, long end) {
+        sendCommand(LRANGE,key,start,end);
+    }
+
+    @Override
+    public void lrem(String key, int count, String value) {
+        sendCommand(LREM,key,String.valueOf(count),value);
+    }
+
+    @Override
+    public void lset(String key, int index, String value) {
+        sendCommand(LSET,key,String.valueOf(index),value);
+    }
+
+    @Override
+    public void ltrim(String key, long start, long end) {
+        sendCommand(LTRIM,key,start,end);
+    }
+
+    @Override
+    public void rpop(String key) {
+        sendCommand(RPOP,key);
+    }
+
+    @Override
+    public void rpoplpush(String source, String destination) {
+        sendCommand(RPOPLPUSH,source,destination);
+    }
+
+    @Override
+    public void rpush(String key, String... values) {
+        sendCommand(RPUSH,getParams(key,values));
+    }
+
+    @Override
+    public void rpushx(String key, String value) {
+        sendCommand(RPUSHX,key,value);
     }
 
     @Override
@@ -315,37 +402,4 @@ public class Client extends Connection implements Commands,ScriptingCommands {
         return null;
     }
 
-
-    private String[] getParams(String script, int keyCount, String... args) {
-        String[] res = new String[2 + args.length];
-        res[0] = script;
-        res[1] = String.valueOf(keyCount);
-        if (args.length > 0) {
-            System.arraycopy(args, 0, res, 2, args.length);
-        }
-        return res;
-    }
-
-    private String[] getParams(List<String> keys, List<String> args) {
-        int keyCount = keys.size();
-        int argCount = args.size();
-
-        String[] params = new String[keyCount + argCount];
-
-
-        for (int i = 0; i < keyCount; i++)
-            params[i] = keys.get(i);
-
-        for (int i = 0; i < argCount; i++)
-            params[keyCount] = args.get(i);
-
-        return params;
-    }
-
-    private String[] getParams(String arg1,String... arg2s){
-        String[] args = new String[arg2s.length + 1];
-        args[0] = arg1;
-        System.arraycopy(arg2s, 0, args, 1, arg2s.length);
-        return args;
-    }
 }

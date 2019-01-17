@@ -64,10 +64,11 @@ public class TedisTest {
 //        }
 //    }
 
-//    @Test
-//    public void flush(){
-//        tedis.flush();
-//    }
+    @Test
+    public void flush(){
+       String res = tedis.flush();
+       Assert.assertEquals("OK",res);
+    }
 
     @Test
     public void expire() {

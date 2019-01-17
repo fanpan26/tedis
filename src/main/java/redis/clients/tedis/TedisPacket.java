@@ -8,7 +8,7 @@ import java.util.List;
 public class TedisPacket extends Packet {
 
     public boolean hasListValue() {
-        return objects != null && !objects.isEmpty();
+        return objects != null;
     }
 
     public List<Object> getObjects() {

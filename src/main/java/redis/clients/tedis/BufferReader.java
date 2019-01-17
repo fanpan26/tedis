@@ -4,10 +4,8 @@ import org.tio.core.exception.AioDecodeException;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static redis.clients.tedis.Keyword.*;
 
 public class BufferReader {
 
@@ -117,21 +115,21 @@ public class BufferReader {
     private static Object readIntegerBody(ByteBuffer buffer) throws AioDecodeException {
         return readIntCrLf(buffer);
     }
+
+    private static final List<Object> EMPTY_LIST = new ArrayList<>(0);
     /**
      * 服务器响应信息解析
      * *号开头，例如 *3\r\n$3\r\nset\r\n$1\r\na\r\n$2\r\nb\r\n
      */
-    private static Object readMulityLineBody(ByteBuffer buffer) throws  AioDecodeException{
+    private static Object readMulityLineBody(ByteBuffer buffer) throws  AioDecodeException {
         int count = readIntCrLf(buffer);
-        if(count == -1){
-            return null;
+        if (count == -1 || count == 0) {
+            return EMPTY_LIST;
         }
-        List<Object> results =new ArrayList<>(count);
-        for (int i=0;i<count;i++){
-            Object ret = processInternal(buffer,buffer.limit(),buffer.position());
-            if(ret == null){
-                return null;
-            }
+
+        List<Object> results = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            Object ret = processInternal(buffer, buffer.limit(), buffer.position());
             results.add(ret);
         }
         return results;
@@ -201,31 +199,11 @@ public class BufferReader {
     }
 
     private static TedisPacket buildPacket(List<Object> reply) {
-        if (reply == null || reply.isEmpty()) {
+        if (reply == null) {
             return null;
         }
-        final Object firstObj = reply.get(0);
-
-        final byte[] resp = (byte[]) firstObj;
         TedisPacket subscribePacket = new TedisPacket();
         subscribePacket.setObjects(reply);
         return subscribePacket;
-    }
-
-    public static byte[] int2Bytes(int value) {
-        byte[] bytes = new byte[4];
-        bytes[3] = (byte) (value >> 24);
-        bytes[2] = (byte) (value >> 16);
-        bytes[1] = (byte) (value >> 8);
-        bytes[0] = (byte) value;
-        return bytes;
-    }
-
-    public static int bytes2Int(byte[] bytes ) {
-        int int1 = bytes[0] & 0xff;
-        int int2 = (bytes[1] & 0xff) << 8;
-        int int3 = (bytes[2] & 0xff) << 16;
-        int int4 = (bytes[3] & 0xff) << 24;
-        return int1 | int2 | int3 | int4;
     }
 }

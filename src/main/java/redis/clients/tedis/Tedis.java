@@ -248,6 +248,118 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
+    public String blpop(long timeout, String... keys) {
+        client.blpop(timeout,keys);
+        return client.getListStringReply(1);
+    }
+
+    @Override
+    public String brpop(long timeout, String... keys) {
+        client.brpop(timeout, keys);
+        return client.getListStringReply(1);
+    }
+
+    @Override
+    public String brpoplpush(String source, String destination, long timeout) {
+        client.brpoplpush(source,destination,timeout);
+        return client.getBulkReply();
+    }
+
+    @Override
+    public String lindex(String key, int index) {
+        client.lindex(key,index);
+        return client.getBulkReply();
+    }
+
+    @Override
+    public int linsertBeofore(String key, String pivot, String value) {
+        return linsert(key,true,pivot,value);
+    }
+
+    @Override
+    public int linsertAfter(String key, String pivot, String value) {
+        return linsert(key,false,pivot,value);
+    }
+
+    @Override
+    public int linsert(String key, boolean before, String pivot, String value) {
+        client.linsert(key,before,pivot,value);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public long llen(String key) {
+        client.llen(key);
+        return client.getLongReply();
+    }
+
+    @Override
+    public String lpop(String key) {
+        client.lpop(key);
+        return client.getBulkReply();
+    }
+
+    @Override
+    public int lpush(String key, String... values) {
+        client.lpush(key,values);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public int lpushx(String key, String value) {
+       client.lpushx(key,value);
+       return client.getIntegerReply();
+    }
+
+    @Override
+    public List<String> lrange(String key, long start, long end) {
+       client.lrange(key,start,end);
+       return client.getListStringReply();
+    }
+
+    @Override
+    public int lrem(String key, int count, String value) {
+       client.lrem(key,count,value);
+       return client.getIntegerReply();
+    }
+
+    @Override
+    public String lset(String key, int index, String value) {
+       client.lset(key,index,value);
+       return client.getStatusCodeReply();
+    }
+
+    @Override
+    public String ltrim(String key, long start, long end) {
+        client.ltrim(key,start,end);
+        return client.getStatusCodeReply();
+    }
+
+    @Override
+    public String rpop(String key) {
+       client.rpop(key);
+       return client.getBulkReply();
+    }
+
+    @Override
+    public String rpoplpush(String source, String destination) {
+        client.rpoplpush(source, destination);
+        return client.getBulkReply();
+    }
+
+    @Override
+    public int rpush(String key, String... values) {
+        client.rpush(key, values);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public int rpushx(String key, String value) {
+        client.rpushx(key, value);
+        return client.getIntegerReply();
+    }
+
+    @Override
     public int len(String key) {
         client.strlen(key);
         return client.getIntegerReply();
@@ -335,9 +447,9 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public void flush(){
+    public String flush(){
         client.flush();
-        client.getStatusCodeReply();
+        return client.getStatusCodeReply();
     }
 
     @Override

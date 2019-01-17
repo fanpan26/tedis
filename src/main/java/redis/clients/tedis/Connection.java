@@ -1,6 +1,5 @@
 package redis.clients.tedis;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.tio.client.ClientChannelContext;
 import org.tio.client.ClientGroupContext;
 import org.tio.client.ReconnConf;
@@ -9,7 +8,6 @@ import org.tio.client.intf.ClientAioHandler;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Node;
 import org.tio.core.Tio;
-import org.tio.core.intf.Packet;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -77,9 +75,48 @@ public class Connection implements Closeable {
         }
     }
 
+    protected String[] getParams(String script, int keyCount, String... args) {
+        String[] res = new String[2 + args.length];
+        res[0] = script;
+        res[1] = String.valueOf(keyCount);
+        if (args.length > 0) {
+            System.arraycopy(args, 0, res, 2, args.length);
+        }
+        return res;
+    }
+
+    protected String[] getParams(List<String> keys, List<String> args) {
+        int keyCount = keys.size();
+        int argCount = args.size();
+
+        String[] params = new String[keyCount + argCount];
+        for (int i = 0; i < keyCount; i++)
+            params[i] = keys.get(i);
+
+        for (int i = 0; i < argCount; i++)
+            params[keyCount] = args.get(i);
+
+        return params;
+    }
+
+    protected String[] getParams(String arg1,String... args2){
+        String[] args = new String[args2.length + 1];
+        args[0] = arg1;
+        System.arraycopy(args2, 0, args, 1, args2.length);
+        return args;
+    }
+
+    protected String[] getParams(String[] args1,long arg2){
+        String[] args = new String[args1.length + 1];
+        System.arraycopy(args1,0,args,0,args1.length);
+        args[args1.length] = String.valueOf(arg2);
+        return args;
+    }
+
     public void sendCommand(final ProtocolCommand cmd,int arg) {
         sendCommand(cmd, String.valueOf(arg));
     }
+
 
     public void sendCommand(final ProtocolCommand cmd,String key,long arg) {
         sendCommand(cmd,key,String.valueOf(arg));
@@ -89,9 +126,12 @@ public class Connection implements Closeable {
         sendCommand(cmd,key,String.valueOf(arg1),String.valueOf(arg2));
     }
 
+    public void sendCommand(final ProtocolCommand cmd,String[] args1,long arg2){
+        sendCommand(cmd,getParams(args1,arg2));
+    }
+
     public void sendCommand(final ProtocolCommand cmd, final String... args) {
         send(Protocol.buildCommandBody(cmd, args));
-        //send( Protocol.buildCommandBodyWithOutputStream(cmd,args));
     }
 
     public String getStatusCodeReply() {
@@ -138,6 +178,14 @@ public class Connection implements Closeable {
             map.put(res.get(i), res.get(i + 1));
         }
         return map;
+    }
+
+    public String getListStringReply(int index) {
+        List<String> res = getListStringReply();
+        if (res.isEmpty()) {
+            return null;
+        }
+        return res.get(index);
     }
 
     public List<String> getListStringReply(){
