@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface TedisCommands {
-
     String set(String key, String value);
     String get(String key);
     String get(String key,int start,int end);
@@ -55,8 +54,6 @@ public interface TedisCommands {
     String rpoplpush(String source,String destination);
     int rpush(String key,String... values);
     int rpushx(String key,String value);
-
-    String ping();
     int publish(final String channel, final String message);
     void subscribe(TedisPubSub pubSub, final String... channels);
     void pSubscribe(TedisPubSub pubSub, final String... channelPatterns);
@@ -66,6 +63,7 @@ public interface TedisCommands {
     long decrBy(final String key, long value);
     boolean exists(final String key);
     boolean del(final String key);
+    String ping();
     void quit();
     String flush();
     String selectDb(int db);
