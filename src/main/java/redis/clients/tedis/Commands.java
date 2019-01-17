@@ -29,6 +29,25 @@ public interface Commands {
     void hmset(final String key,String... kvs);
     void hsetnx(final String key,final String field,final String value);
     void hvals(final String key);
+
+    void blpop(long timeout, String... keys);
+    void brpop(long timeout,String... keys);
+    void brpoplpush(final String source,final String destination,long timeout);
+    void lindex(final String key,int index);
+    void linsert(final String key,boolean before,final String pivot,final String value);
+    void llen(final String key);
+    void lpop(final String key);
+    void lpush(final String key,String... values);
+    void lpushx(final String key,final String value);
+    void lrange(final String key,long start,long end);
+    void lrem(final String key,int count,final String value);
+    void lset(final String key,int index,final String value);
+    void ltrim(final String key,long start,long end);
+    void rpop(final String key);
+    void rpoplpush(final String source,final String destination);
+    void rpush(final String key,String... values);
+    void rpushx(final String key,final String value);
+
     void ping();
     void publish(final String channel,final String message);
     void subscribe(final String... channels);
