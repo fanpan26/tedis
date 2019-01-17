@@ -1,7 +1,7 @@
 
 ## HASH
 * `1	HDEL key field1 field2`
-<br/><font size='10' color='green'>删除一个或多个哈希表字段</font>
+<br/><font color='green'>删除一个或多个哈希表字段</font>
 * 2	HEXISTS key field 
 <br/>查看哈希表 key 中，指定的字段是否存在。
 * 3	HGET key field 
