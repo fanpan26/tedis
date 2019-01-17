@@ -142,6 +142,12 @@ public class StringTest {
     }
 
     @Test
+    public void getEmpty(){
+        String result = tedis.set("test1","");
+        String result1=tedis.get("test1");
+    }
+
+    @Test
     public void incr() {
         long res = tedis.incr("incr_key");
         Assert.assertEquals(true, res > 0);

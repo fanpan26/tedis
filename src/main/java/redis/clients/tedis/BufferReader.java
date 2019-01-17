@@ -95,8 +95,9 @@ public class BufferReader {
         }
 
         byte[] body = new byte[bodyLength];
-        buffer.get(body, 0, bodyLength);
-
+        if(bodyLength>0) {
+            buffer.get(body, 0, bodyLength);
+        }
         //读取crlf
         if (buffer.remaining() >= 2) {
             buffer.get();
