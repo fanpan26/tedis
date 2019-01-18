@@ -203,8 +203,8 @@ public class BufferReader {
         if (reply == null) {
             return null;
         }
-        TedisPacket subscribePacket = new TedisPacket();
-        subscribePacket.setObjects(reply);
-        return subscribePacket;
+        TedisPacket packet = new TedisPacket();
+        packet.setObjects(reply);
+        return packet;
     }
 }
