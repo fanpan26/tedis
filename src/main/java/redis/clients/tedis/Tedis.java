@@ -29,23 +29,12 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         tedisLock = new DefaultTedisLock(client);
     }
 
-    /**
-     * 设置缓存
-     *
-     * @param key
-     * @param value
-     */
     @Override
     public String set(String key, String value) {
         client.set(key, value);
         return client.getStatusCodeReply();
     }
-
-    /**
-     * 获取缓存
-     *
-     * @param key
-     */
+    
     @Override
     public String get(String key) {
         client.get(key);
