@@ -17,19 +17,19 @@ public abstract class TedisPubSub {
     public  abstract void onUnSubscribe(final String channel);
 
     public void unSubscribe() {
-        client.unSubscribe();
+        client.unsubscribe();
     }
 
     public void unSubscribe(String... channels) {
-        client.unSubscribe(channels);
+        client.unsubscribe(channels);
     }
 
     public void pUnSubscribe(){
-        client.pUnSubscribe();
+        client.punsubscribe();
     }
 
     public void pUnSubscribe(String... patterns){
-        client.pUnSubscribe(patterns);
+        client.punsubscribe(patterns);
     }
 
     //订阅的 Channel 个数
@@ -44,7 +44,7 @@ public abstract class TedisPubSub {
     }
     public void proceedPatterns(Client client, final String... channels) {
         prepareSubscribe(client, channels);
-        client.pSubscribe(channels);
+        client.psubscribe(channels);
         process();
     }
 
