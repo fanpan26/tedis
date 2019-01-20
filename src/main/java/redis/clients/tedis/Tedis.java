@@ -611,4 +611,83 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         scanResult.setObjects(result);
         return scanResult;
     }
+
+    @Override
+    public int zadd(String key, float score, String member) {
+        client.zadd(key, String.valueOf(score), member);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public int zadd(String key, List<String> scores, List<String> members) {
+        String[] args = getKeyValues(scores, members);
+        client.zadd(key, args);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public long zcount(String key, float min, float max) {
+        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        return client.getLongReply();
+    }
+
+    @Override
+    public long zcount(String key, int min, int max) {
+        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        return client.getLongReply();
+    }
+
+    @Override
+    public long zcount(String key, long min, long max) {
+        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        return client.getLongReply();
+    }
+
+    @Override
+    public long zcount(String key, double min, double max) {
+        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        return client.getLongReply();
+    }
+
+    @Override
+    public long zcard(String key) {
+        client.zcard(key);
+        return client.getLongReply();
+    }
+
+    @Override
+    public long zincrby(String key, long increment, String member) {
+        client.zincrby(key, String.valueOf(increment), member);
+        return Long.valueOf(client.getBulkReply()).longValue();
+    }
+
+    @Override
+    public int zincrby(String key, int increment, String member) {
+        client.zincrby(key, String.valueOf(increment), member);
+        return Integer.valueOf(client.getBulkReply()).intValue();
+    }
+
+    @Override
+    public double zincrby(String key, double increment, String member) {
+        client.zincrby(key, String.valueOf(increment), member);
+        return Double.valueOf(client.getBulkReply()).doubleValue();
+    }
+
+    @Override
+    public float zincrby(String key, float increment, String member) {
+        client.zincrby(key, String.valueOf(increment), member);
+        return Float.valueOf(client.getBulkReply()).floatValue();
+    }
+
+    @Override
+    public long zlexcount(String key, long min, long max) {
+        client.zlexcount(key,String.valueOf(min),String.valueOf(max));
+        return client.getLongReply();
+    }
+
+    @Override
+    public int zlexcount(String key, int min, int max) {
+        client.zlexcount(key,String.valueOf(min),String.valueOf(max));
+        return client.getIntegerReply();
+    }
 }

@@ -1,7 +1,12 @@
 package redis.clients.tedis;
 
 
-public interface TedisCommands extends StringCommands,SetCommands,HashCommands,ListCommands,PubSubCommands{
+public interface TedisCommands extends StringCommands,
+        SetCommands,
+        HashCommands,
+        ListCommands,
+        SortedSetCommands,
+        PubSubCommands{
     boolean exists(final String key);
     boolean del(final String key);
     String ping();

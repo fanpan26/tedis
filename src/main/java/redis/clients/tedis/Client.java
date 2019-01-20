@@ -327,6 +327,31 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
+    public void zadd(String key, String... args) {
+        sendCommand(ZADD,getParams(key,args));
+    }
+
+    @Override
+    public void zcard(String key) {
+        sendCommand(ZCARD,key);
+    }
+
+    @Override
+    public void zcount(String key, String min, String max) {
+        sendCommand(ZCOUNT,key,min,max);
+    }
+
+    @Override
+    public void zincrby(String key, String increment, String member) {
+        sendCommand(ZINCRBY, key, increment, member);
+    }
+
+    @Override
+    public void zlexcount(String key, String min, String max) {
+        sendCommand(ZLEXCOUNT,key,min,max);
+    }
+
+    @Override
     public void mset(String... kvs) {
         sendCommand(MSET, kvs);
     }

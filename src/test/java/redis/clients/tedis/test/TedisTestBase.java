@@ -1,6 +1,7 @@
 package redis.clients.tedis.test;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import redis.clients.tedis.Tedis;
 
@@ -25,4 +26,5 @@ public class TedisTestBase {
     protected String generateKey(String prefix) {
         return "tedis:" + prefix + ":" + System.currentTimeMillis();
     }
+
 }
