@@ -34,7 +34,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         client.set(key, value);
         return client.getStatusCodeReply();
     }
-    
+
     @Override
     public String get(String key) {
         client.get(key);

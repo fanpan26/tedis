@@ -10,17 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class TedisTest {
-
-    private Tedis tedis;
-    private Tedis tedis1;
-
-    @Before
-    public void before() {
-        tedis = new Tedis("192.168.1.225", 6379);
-        tedis1 = new Tedis("192.168.1.225", 6379);
-    }
-
+public class TedisTest extends TedisTestBase{
 
     @Test
     public void ping() {
@@ -92,14 +82,6 @@ public class TedisTest {
         tedis.set(key, "value");
         boolean expired = tedis.expireAt(key, System.currentTimeMillis() / 1000 + 3);
         Assert.assertTrue(expired);
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-
-        }
-        String value = tedis.get(key);
-        Assert.assertEquals(null, value);
     }
 
     @Test

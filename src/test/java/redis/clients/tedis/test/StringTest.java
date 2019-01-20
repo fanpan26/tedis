@@ -9,14 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class StringTest {
-
-    private Tedis tedis;
-
-    @Before
-    public void before() {
-        tedis = new Tedis("192.168.1.225", 6379);
-    }
+public class StringTest extends TedisTestBase{
 
     @Test
     public void getRange() {
@@ -34,7 +27,9 @@ public class StringTest {
 
     @Test
     public void getbit() {
-        int res = tedis.getbit("getsetTest", 5);
+        String key = generateKey("getbit");
+        tedis.setbit(key,5,true);
+        int res = tedis.getbit(key, 5);
         Assert.assertEquals(1, res);
     }
 
@@ -137,8 +132,10 @@ public class StringTest {
 
     @Test
     public void get() {
-        String result = tedis.get("test");
-        Assert.assertEquals("test", result);
+        String key = generateKey("get");
+        tedis.set(key,"testValue");
+       String res = tedis.get(key);
+        Assert.assertEquals("testValue", res);
     }
 
     @Test

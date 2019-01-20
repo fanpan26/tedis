@@ -9,14 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class HashTest {
-
-    private Tedis tedis;
-
-    @Before
-    public void before() {
-        tedis = new Tedis("192.168.1.225", 6379);
-    }
+public class HashTest extends TedisTestBase{
 
     @Test
     public void hashset() {
