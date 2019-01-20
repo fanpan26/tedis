@@ -1,5 +1,6 @@
 package redis.clients.tedis.test;
 
+import org.junit.After;
 import org.junit.Before;
 import redis.clients.tedis.Tedis;
 
@@ -14,6 +15,11 @@ public class TedisTestBase {
     public void before() {
         tedis = new Tedis("192.168.187.129", 6379);
         tedis.ping();
+    }
+
+    @After
+    public void after(){
+        //tedis.quit();
     }
 
     protected String generateKey(String prefix) {

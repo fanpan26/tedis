@@ -1,13 +1,12 @@
 package redis.clients.tedis.test;
 
-import redis.clients.tedis.Tedis;
 
-public class PubSubTest {
-    public static void main(String[] args){
-        MyPubSub pubSub = new MyPubSub();
+import org.junit.Test;
 
-        Tedis tedis = new Tedis("192.168.1.225", 6379);
+public class PubSubTest extends TedisTestBase{
 
-        tedis.subscribe(pubSub,"test_channel");
+    @Test
+    public void subscribe(){
+        tedis.subscribe(new MyPubSub(),"channel1");
     }
 }
