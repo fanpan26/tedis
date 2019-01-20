@@ -17,7 +17,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     private Client client;
 
     public Tedis() {
-       this(null,0);
+        this(null, 0);
     }
 
     public Tedis(final String host, final int port) {
@@ -42,7 +42,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public List<String> get(String... keys){
+    public List<String> get(String... keys) {
         client.get(keys);
         return client.getListStringReply();
     }
@@ -55,7 +55,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public String getset(String key, String value) {
-        client.getset(key,value);
+        client.getset(key, value);
         return client.getBulkReply();
     }
 
@@ -70,8 +70,9 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         client.setbit(key, offset, value ? 1 : 0);
         return client.getIntegerReply();
     }
+
     @Override
-   public  String setex(String key, String value, long time, TimeUnit unit) {
+    public String setex(String key, String value, long time, TimeUnit unit) {
         long expires = 0;
         switch (unit) {
             case DAYS:
@@ -99,7 +100,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public boolean setnx(String key, String value) {
-        client.setnx(key,value);
+        client.setnx(key, value);
         return client.getBooleanReply();
     }
 
@@ -110,23 +111,23 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
 
-    private String[] getKeyValues(List<String> keys,List<String> values){
-        if(keys.size() != values.size()) {
+    private String[] getKeyValues(List<String> keys, List<String> values) {
+        if (keys.size() != values.size()) {
             throw new IllegalArgumentException("keys size must equals values size");
         }
         List<String> kvs = new ArrayList<>();
-        for(int i=0;i<keys.size();i++){
+        for (int i = 0; i < keys.size(); i++) {
             kvs.add(keys.get(i));
             kvs.add(values.get(i));
         }
-        String[] kvsStr = new String[keys.size()<<1];
+        String[] kvsStr = new String[keys.size() << 1];
         kvs.toArray(kvsStr);
         return kvsStr;
     }
 
     @Override
-   public int msetnx(List<String> keys,List<String> values) {
-        client.msetnx(getKeyValues(keys,values));
+    public int msetnx(List<String> keys, List<String> values) {
+        client.msetnx(getKeyValues(keys, values));
         return client.getIntegerReply();
     }
 
@@ -137,21 +138,21 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public float incrByfloat(String key,float value){
-        client.incrByfloat(key,value);
+    public float incrByfloat(String key, float value) {
+        client.incrByfloat(key, value);
         return client.getFloatReply();
     }
 
     @Override
-    public int append(String key,String value){
-        client.append(key,value);
+    public int append(String key, String value) {
+        client.append(key, value);
         return client.getIntegerReply();
     }
 
     @Override
     public int hset(String key, String field, String value) {
-       client.hset(key,field,value);
-       return client.getIntegerReply();
+        client.hset(key, field, value);
+        return client.getIntegerReply();
     }
 
     @Override
@@ -162,42 +163,42 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public String hget(String key, String field) {
-        client.hget(key,field);
+        client.hget(key, field);
         return client.getBulkReply();
     }
 
     @Override
     public boolean hdel(String key, String... fields) {
-       client.hdel(key,fields);
-       return client.getBooleanReply();
+        client.hdel(key, fields);
+        return client.getBooleanReply();
     }
 
     @Override
-    public Map<String,String> hget(String key) {
+    public Map<String, String> hget(String key) {
         client.hget(key);
         return client.getMapReply();
     }
 
     @Override
     public long hincrBy(String key, String field, long value) {
-        client.hincrBy(key,field,value);
+        client.hincrBy(key, field, value);
         return client.getLongReply();
     }
 
     @Override
     public long hincrBy(String key, String field) {
-       return hincrBy(key,field,1L);
+        return hincrBy(key, field, 1L);
     }
 
     @Override
     public float hincrByFloat(String key, String field, float value) {
-        client.hincrByFloat(key,field,value);
+        client.hincrByFloat(key, field, value);
         return client.getFloatReply();
     }
 
     @Override
     public float hincrByFloat(String key, String field) {
-        return hincrByFloat(key,field,1.0f);
+        return hincrByFloat(key, field, 1.0f);
     }
 
     @Override
@@ -226,7 +227,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public boolean hsetnx(String key, String field, String value) {
-        client.hsetnx(key,field,value);
+        client.hsetnx(key, field, value);
         return client.getBooleanReply();
     }
 
@@ -238,7 +239,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public String blpop(long timeout, String... keys) {
-        client.blpop(timeout,keys);
+        client.blpop(timeout, keys);
         return client.getListStringReply(1);
     }
 
@@ -250,29 +251,29 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public String brpoplpush(String source, String destination, long timeout) {
-        client.brpoplpush(source,destination,timeout);
+        client.brpoplpush(source, destination, timeout);
         return client.getBulkReply();
     }
 
     @Override
     public String lindex(String key, int index) {
-        client.lindex(key,index);
+        client.lindex(key, index);
         return client.getBulkReply();
     }
 
     @Override
     public int linsertBeofore(String key, String pivot, String value) {
-        return linsert(key,true,pivot,value);
+        return linsert(key, true, pivot, value);
     }
 
     @Override
     public int linsertAfter(String key, String pivot, String value) {
-        return linsert(key,false,pivot,value);
+        return linsert(key, false, pivot, value);
     }
 
     @Override
     public int linsert(String key, boolean before, String pivot, String value) {
-        client.linsert(key,before,pivot,value);
+        client.linsert(key, before, pivot, value);
         return client.getIntegerReply();
     }
 
@@ -290,44 +291,44 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public int lpush(String key, String... values) {
-        client.lpush(key,values);
+        client.lpush(key, values);
         return client.getIntegerReply();
     }
 
     @Override
     public int lpushx(String key, String value) {
-       client.lpushx(key,value);
-       return client.getIntegerReply();
+        client.lpushx(key, value);
+        return client.getIntegerReply();
     }
 
     @Override
     public List<String> lrange(String key, long start, long end) {
-       client.lrange(key,start,end);
-       return client.getListStringReply();
+        client.lrange(key, start, end);
+        return client.getListStringReply();
     }
 
     @Override
     public int lrem(String key, int count, String value) {
-       client.lrem(key,count,value);
-       return client.getIntegerReply();
+        client.lrem(key, count, value);
+        return client.getIntegerReply();
     }
 
     @Override
     public String lset(String key, int index, String value) {
-       client.lset(key,index,value);
-       return client.getStatusCodeReply();
+        client.lset(key, index, value);
+        return client.getStatusCodeReply();
     }
 
     @Override
     public String ltrim(String key, long start, long end) {
-        client.ltrim(key,start,end);
+        client.ltrim(key, start, end);
         return client.getStatusCodeReply();
     }
 
     @Override
     public String rpop(String key) {
-       client.rpop(key);
-       return client.getBulkReply();
+        client.rpop(key);
+        return client.getBulkReply();
     }
 
     @Override
@@ -428,6 +429,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         client.exists(key);
         return client.getBooleanReply();
     }
+
     @Override
     public void quit() {
         client.quit();
@@ -436,7 +438,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public String flush(){
+    public String flush() {
         client.flush();
         return client.getStatusCodeReply();
     }
@@ -478,7 +480,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<Boolean> scriptExists(String... sha1) {
-       return client.scriptExists(sha1);
+        return client.scriptExists(sha1);
     }
 
     @Override
@@ -488,12 +490,12 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public Object eval(String script, List<String> keys, List<String> args) {
-        return client.eval(script,keys,args);
+        return client.eval(script, keys, args);
     }
 
     @Override
     public Object eval(String script, int keyCount, String... params) {
-        return client.eval(script,keyCount,params);
+        return client.eval(script, keyCount, params);
     }
 
     @Override
@@ -503,16 +505,110 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public Object evalsha(String sha1, List<String> keys, List<String> args) {
-        return client.evalsha(sha1,keys,args);
+        return client.evalsha(sha1, keys, args);
     }
 
     @Override
     public Object evalsha(String sha1, int keyCount, String... params) {
-        return client.evalsha(sha1,keyCount,params);
+        return client.evalsha(sha1, keyCount, params);
     }
 
     @Override
     public String scriptLoad(String script) {
         return client.scriptLoad(script);
+    }
+
+    @Override
+    public long sadd(String key, String... members) {
+        client.sadd(key, members);
+        return client.getLongReply();
+    }
+
+    @Override
+    public long scard(String key) {
+        client.scard(key);
+        return client.getLongReply();
+    }
+
+    @Override
+    public List<String> sdiff(String key1, String key2) {
+        client.sdiff(key1, key2);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public long sdiffstore(String destination, String key1, String key2) {
+        client.sdiffstore(destination, key1, key2);
+        return client.getLongReply();
+    }
+
+    @Override
+    public List<String> sinter(String key1, String key2) {
+        client.sinter(key1, key2);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public long sinterstore(String destination, String key1, String key2) {
+        client.sinterstore(destination, key1, key2);
+        return client.getLongReply();
+    }
+
+    @Override
+    public boolean sismember(String key, String member) {
+        client.sismember(key, member);
+        return client.getBooleanReply();
+    }
+
+    @Override
+    public List<String> smembers(String key) {
+        client.smembers(key);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public int smove(String source, String destination, String member) {
+        client.smove(source, destination, member);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public String spop(String key) {
+        client.spop(key);
+        return client.getBulkReply();
+    }
+
+    @Override
+    public List<String> srandmember(String key, int count) {
+        client.srandmember(key, count);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public int srem(String key, String... members) {
+        client.srem(key, members);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public List<String> sunion(String key1, String key2) {
+        client.sunion(key1, key2);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public long sunionstore(String destination, String key1, String key2) {
+        client.sunionstore(destination, key1, key2);
+        return client.getLongReply();
+    }
+
+    @Override
+    public ScanResult sscan(String key, long cursor, String match, int count) {
+        client.sscan(key, cursor, match, count);
+        List<String> result = client.getListStringReply();
+        ScanResult scanResult = new ScanResult(result.get(0));
+        result.remove(0);
+        scanResult.setObjects(result);
+        return scanResult;
     }
 }
