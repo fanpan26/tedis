@@ -29,7 +29,6 @@ public interface Commands {
     void hmset(final String key,String... kvs);
     void hsetnx(final String key,final String field,final String value);
     void hvals(final String key);
-
     void blpop(long timeout, String... keys);
     void brpop(long timeout,String... keys);
     void brpoplpush(final String source,final String destination,long timeout);
@@ -48,12 +47,28 @@ public interface Commands {
     void rpush(final String key,String... values);
     void rpushx(final String key,final String value);
 
+    void sadd(final String key,String... members);
+    void scard(final String key);
+    void sdiff(final String key1,final String key2);
+    void sdiffstore(final String destination,final String key1,final String key2);
+    void sinter(final String key1,final String key2);
+    void sinterstore(final String destination,final String key1,final String key2);
+    void sismember(final String key,final String member);
+    void smembers(final String key);
+    void smove(final String source,final String desination,final String member);
+    void spop(final String key);
+    void srandmember(final String key,int count);
+    void srem(final String key,String... members);
+    void sunion(final String key1,final String key2);;
+    void sunionstore(final String destination,final String key1,final String key2);
+    void sscan(final String key,long cursor,final String match,int count);
+
     void ping();
     void publish(final String channel,final String message);
     void subscribe(final String... channels);
-    void unSubscribe(final String... channels);
-    void pSubscribe(final String... channelPatterns);
-    void pUnSubscribe(final String... channelPatterns);
+    void unsubscribe(final String... channels);
+    void psubscribe(final String... channelPatterns);
+    void punsubscribe(final String... channelPatterns);
     void incr(final String key);
     void decr(final String key);
     void incrBy(final String key,long value);
