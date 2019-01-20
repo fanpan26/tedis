@@ -1,8 +1,5 @@
 package redis.clients.tedis;
 
-
-import javafx.scene.chart.ValueAxis;
-
 import java.util.List;
 
 import static redis.clients.tedis.Command.*;
@@ -47,8 +44,8 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
-    public void get(String... keys){
-        sendCommand(MGET,keys);
+    public void get(String... keys) {
+        sendCommand(MGET, keys);
     }
 
     @Override
@@ -57,63 +54,63 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
-    public void psetex(String key,String value,long milliseconds){
-        sendCommand(PSETEX,key,String.valueOf(milliseconds),value);
+    public void psetex(String key, String value, long milliseconds) {
+        sendCommand(PSETEX, key, String.valueOf(milliseconds), value);
     }
 
     @Override
     public void setnx(String key, String value) {
-        sendCommand(SETNX,key,value);
+        sendCommand(SETNX, key, value);
     }
 
     @Override
-    public void msetnx(String... kvs){
-        sendCommand(MSETNX,kvs);
+    public void msetnx(String... kvs) {
+        sendCommand(MSETNX, kvs);
     }
 
     @Override
     public void setrange(String key, long offset, String value) {
-        sendCommand(SETRANGE,key,String.valueOf(offset),value);
+        sendCommand(SETRANGE, key, String.valueOf(offset), value);
     }
 
     @Override
     public void strlen(String key) {
-        sendCommand(STRLEN,key);
+        sendCommand(STRLEN, key);
     }
 
     @Override
-    public void incrByfloat(String key,float value) {
+    public void incrByfloat(String key, float value) {
         sendCommand(INCRBYFLOAT, key, String.valueOf(value));
     }
 
     @Override
-    public void append(String key,String value){
-        sendCommand(APPEND,key,value);
+    public void append(String key, String value) {
+        sendCommand(APPEND, key, value);
     }
 
     @Override
     public void hset(String key, String field, String value) {
-        sendCommand(HSET,key,field,value);
+        sendCommand(HSET, key, field, value);
     }
 
     @Override
     public void hexists(String key, String field) {
-        sendCommand(HEXISTS,key,field);
+        sendCommand(HEXISTS, key, field);
     }
 
     @Override
     public void hget(String key, String field) {
-        sendCommand(HGET,key,field);
+        sendCommand(HGET, key, field);
     }
 
     @Override
     public void hdel(String key, String... fields) {
-        sendCommand(HDEL, getParams(key,fields));
+        sendCommand(HDEL, getParams(key, fields));
     }
 
     @Override
     public void hget(String key) {
-        sendCommand(HGETALL,key);
+        sendCommand(HGETALL, key);
     }
 
     @Override
@@ -123,37 +120,37 @@ public class Client extends Connection implements Commands,ScriptingCommands {
 
     @Override
     public void hincrByFloat(String key, String field, float value) {
-        sendCommand(HINCRBYFLOAT,key,field,String.valueOf(value));
+        sendCommand(HINCRBYFLOAT, key, field, String.valueOf(value));
     }
 
     @Override
     public void hkeys(String key) {
-        sendCommand(HKEYS,key);
+        sendCommand(HKEYS, key);
     }
 
     @Override
     public void hlen(String key) {
-        sendCommand(HLEN,key);
+        sendCommand(HLEN, key);
     }
 
     @Override
     public void hmget(String key, String... fields) {
-        sendCommand(HMGET,getParams(key,fields));
+        sendCommand(HMGET, getParams(key, fields));
     }
 
     @Override
     public void hmset(String key, String... kvs) {
-        sendCommand(HMSET,getParams(key,kvs));
+        sendCommand(HMSET, getParams(key, kvs));
     }
 
     @Override
     public void hsetnx(String key, String field, String value) {
-        sendCommand(HSETNX,key,field,value);
+        sendCommand(HSETNX, key, field, value);
     }
 
     @Override
     public void hvals(String key) {
-        sendCommand(HVALS,key);
+        sendCommand(HVALS, key);
     }
 
     @Override
@@ -163,32 +160,32 @@ public class Client extends Connection implements Commands,ScriptingCommands {
 
     @Override
     public void brpop(long timeout, String... keys) {
-        sendCommand(BRPOP,keys,timeout);
+        sendCommand(BRPOP, keys, timeout);
     }
 
     @Override
     public void brpoplpush(String source, String destination, long timeout) {
-        sendCommand(BRPOPLPUSH,source,destination,String.valueOf(timeout));
+        sendCommand(BRPOPLPUSH, source, destination, String.valueOf(timeout));
     }
 
     @Override
     public void lindex(String key, int index) {
-        sendCommand(LINDEX,key,index);
+        sendCommand(LINDEX, key, index);
     }
 
     @Override
     public void linsert(String key, boolean before, String pivot, String value) {
-        sendCommand(LINSERT,key,before?"BEFORE":"AFTER",pivot,value);
+        sendCommand(LINSERT, key, before ? "BEFORE" : "AFTER", pivot, value);
     }
 
     @Override
     public void llen(String key) {
-        sendCommand(LLEN,key);
+        sendCommand(LLEN, key);
     }
 
     @Override
     public void lpop(String key) {
-        sendCommand(LPOP,key);
+        sendCommand(LPOP, key);
     }
 
     @Override
@@ -198,66 +195,154 @@ public class Client extends Connection implements Commands,ScriptingCommands {
 
     @Override
     public void lpushx(String key, String value) {
-        sendCommand(LPUSHX,key,value);
+        sendCommand(LPUSHX, key, value);
     }
 
     @Override
     public void lrange(String key, long start, long end) {
-        sendCommand(LRANGE,key,start,end);
+        sendCommand(LRANGE, key, start, end);
     }
 
     @Override
     public void lrem(String key, int count, String value) {
-        sendCommand(LREM,key,String.valueOf(count),value);
+        sendCommand(LREM, key, String.valueOf(count), value);
     }
 
     @Override
     public void lset(String key, int index, String value) {
-        sendCommand(LSET,key,String.valueOf(index),value);
+        sendCommand(LSET, key, String.valueOf(index), value);
     }
 
     @Override
     public void ltrim(String key, long start, long end) {
-        sendCommand(LTRIM,key,start,end);
+        sendCommand(LTRIM, key, start, end);
     }
 
     @Override
     public void rpop(String key) {
-        sendCommand(RPOP,key);
+        sendCommand(RPOP, key);
     }
 
     @Override
     public void rpoplpush(String source, String destination) {
-        sendCommand(RPOPLPUSH,source,destination);
+        sendCommand(RPOPLPUSH, source, destination);
     }
 
     @Override
     public void rpush(String key, String... values) {
-        sendCommand(RPUSH,getParams(key,values));
+        sendCommand(RPUSH, getParams(key, values));
     }
 
     @Override
     public void rpushx(String key, String value) {
-        sendCommand(RPUSHX,key,value);
+        sendCommand(RPUSHX, key, value);
+    }
+
+    @Override
+    public void sadd(String key, String... members) {
+        sendCommand(SADD, getParams(key, members));
+    }
+
+    @Override
+    public void scard(String key) {
+        sendCommand(SCARD, key);
+    }
+
+    @Override
+    public void sdiff(String key1, String key2) {
+        sendCommand(SDIFF, key1, key2);
+    }
+
+    @Override
+    public void sdiffstore(String destination, String key1, String key2) {
+        sendCommand(SDIFFSTORE, destination, key1, key2);
+    }
+
+    @Override
+    public void sinter(String key1, String key2) {
+        sendCommand(SINTER, key1, key2);
+    }
+
+    @Override
+    public void sinterstore(String destination, String key1, String key2) {
+        sendCommand(SINTERSTORE, destination, key1, key2);
+    }
+
+    @Override
+    public void sismember(String key, String member) {
+        sendCommand(SISMEMBER, key, member);
+    }
+
+    @Override
+    public void smembers(String key) {
+        sendCommand(SMEMBERS, key);
+    }
+
+    @Override
+    public void smove(String source, String destination, String member) {
+        sendCommand(SMOVE, source, destination, member);
+    }
+
+    @Override
+    public void spop(String key) {
+        sendCommand(SPOP, key);
+    }
+
+    @Override
+    public void srandmember(String key, int count) {
+        sendCommand(SRANDMEMBER, key, count);
+    }
+
+    @Override
+    public void srem(String key, String... members) {
+        sendCommand(SREM, getParams(key, members));
+    }
+
+    @Override
+    public void sunion(String key1, String key2) {
+        sendCommand(SUNION, key1, key2);
+    }
+
+    @Override
+    public void sunionstore(String destination, String key1, String key2) {
+        sendCommand(SUNIONSTORE, destination, key1, key2);
+    }
+
+    @Override
+    public void sscan(String key, long cursor, String match, int count) {
+        boolean hasMatch = match != null && match.length() > 0;
+        if (count > 0) {
+            if (hasMatch) {
+                sendCommand(SSCAN, key, String.valueOf(cursor), "MATCH", match, "COUNT", String.valueOf(count));
+            } else {
+                sendCommand(SSCAN, key, String.valueOf(cursor), "COUNT", String.valueOf(count));
+            }
+        } else {
+            if (hasMatch) {
+                sendCommand(SSCAN, key, String.valueOf(cursor), "match", match);
+            } else {
+                sendCommand(SSCAN, key, String.valueOf(cursor));
+            }
+        }
     }
 
     @Override
     public void mset(String... kvs) {
-        sendCommand(MSET,kvs);
+        sendCommand(MSET, kvs);
     }
 
     @Override
     public void getset(String key, String value) {
-        sendCommand(GETSET,key,value);
+        sendCommand(GETSET, key, value);
     }
 
     @Override
     public void getbit(String key, int offset) {
-        sendCommand(GETBIT,key,offset);
+        sendCommand(GETBIT, key, offset);
     }
 
     @Override
-    public void setbit(String key, int offset,int value) {
+    public void setbit(String key, int offset, int value) {
         sendCommand(SETBIT, key, offset, value);
     }
 
@@ -277,17 +362,17 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
-    public void unSubscribe(String... channels) {
+    public void unsubscribe(String... channels) {
         sendCommand(UNSUBSCRIBE, channels);
     }
 
     @Override
-    public void pSubscribe(String... channelPatterns) {
+    public void psubscribe(String... channelPatterns) {
         sendCommand(PSUBSCRIBE, channelPatterns);
     }
 
     @Override
-    public void pUnSubscribe(String... channelPatterns) {
+    public void punsubscribe(String... channelPatterns) {
         sendCommand(PUNSUBSCRIBE, channelPatterns);
     }
 
@@ -333,27 +418,27 @@ public class Client extends Connection implements Commands,ScriptingCommands {
 
     @Override
     public void selectDb(int db) {
-        sendCommand(SELECT,db);
+        sendCommand(SELECT, db);
     }
 
     @Override
     public void expire(String key, long seconds) {
-        sendCommand(EXPIRE,key,seconds);
+        sendCommand(EXPIRE, key, seconds);
     }
 
     @Override
     public void expireAt(String key, long timestamp) {
-        sendCommand(EXPIREAT,key,timestamp);
+        sendCommand(EXPIREAT, key, timestamp);
     }
 
     @Override
     public void pexpire(String key, long milliseconds) {
-        sendCommand(PEXPIRE,key,milliseconds);
+        sendCommand(PEXPIRE, key, milliseconds);
     }
 
     @Override
     public void pexpireAt(String key, long timestamp) {
-        sendCommand(PEXPIREAT,key,timestamp);
+        sendCommand(PEXPIREAT, key, timestamp);
     }
 
     @Override
@@ -378,7 +463,7 @@ public class Client extends Connection implements Commands,ScriptingCommands {
 
     @Override
     public Object eval(String script, int keyCount, String... params) {
-        sendCommand(EVAL, getParams(script,keyCount, params));
+        sendCommand(EVAL, getParams(script, keyCount, params));
         return getEvalReply();
     }
 
@@ -401,5 +486,4 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     public String scriptLoad(String script) {
         return null;
     }
-
 }
