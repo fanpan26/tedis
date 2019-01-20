@@ -13,6 +13,7 @@ public class TedisTestBase {
     @Before
     public void before() {
         tedis = new Tedis("192.168.187.129", 6379);
+        tedis.ping();
     }
 
     protected String generateKey(String prefix) {
