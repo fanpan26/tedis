@@ -184,6 +184,4 @@ public class ListTest extends TedisTestBase {
         Assert.assertNull(res);
     }
 
-
-//    String brpoplpush(String source,String destination,long timeout);
 }
