@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public interface TedisCommands {
+public interface TedisCommands extends SetCommands{
     String set(String key, String value);
     String get(String key);
     String get(String key,int start,int end);
