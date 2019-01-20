@@ -188,16 +188,24 @@ public class Connection implements Closeable {
         return res.get(index);
     }
 
-    public List<String> getListStringReply(){
+    public List<String> getListStringReply() {
         List<Object> replies = getListReply();
-        if(replies == null){
+        if (replies == null) {
             return null;
         }
         List<String> strReplies = new ArrayList<>();
-        for (Object obj : replies){
-            if(obj instanceof byte[]){
-                strReplies.add(SafeEncoder.encode((byte[])obj));
-            }else {
+        for (Object obj : replies) {
+            if (obj instanceof byte[]) {
+                strReplies.add(SafeEncoder.encode((byte[]) obj));
+            } else if (obj instanceof List) {
+                for (Object obj1 : (List) obj) {
+                    if (obj1 instanceof byte[]) {
+                        strReplies.add(SafeEncoder.encode((byte[]) obj1));
+                    } else {
+                        strReplies.add(String.valueOf(obj1));
+                    }
+                }
+            } else {
                 strReplies.add(String.valueOf(obj));
             }
         }
