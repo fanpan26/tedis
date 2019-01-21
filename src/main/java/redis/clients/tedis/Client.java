@@ -114,13 +114,8 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
-    public void hincrBy(String key, String field, long value) {
-        sendCommand(HINCRBY, key, field, String.valueOf(value));
-    }
-
-    @Override
-    public void hincrByFloat(String key, String field, float value) {
-        sendCommand(HINCRBYFLOAT, key, field, String.valueOf(value));
+    public void hincrBy(String key, String field, String value) {
+        sendCommand(HINCRBY, key, field, value);
     }
 
     @Override

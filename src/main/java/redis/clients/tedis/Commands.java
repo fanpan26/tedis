@@ -21,8 +21,7 @@ public interface Commands {
     void hget( String key, String field);
     void hdel( String key, String... fields);
     void hget( String key);
-    void hincrBy( String key, String field,long value);
-    void hincrByFloat( String key, String field,float value);
+    void hincrBy( String key, String field,String value);
     void hkeys( String key);
     void hlen( String key);
     void hmget( String key,String... fields);

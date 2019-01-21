@@ -14,10 +14,11 @@ public interface HashCommands {
     String hget(String key,String field);
     boolean hdel(String key,String... fields);
     Map<String,String> hget(String key);
-    long hincrBy(String key,String field,long value);
     long hincrBy(String key,String field);
-    float hincrByFloat(String key,String field,float value);
-    float hincrByFloat(String key,String field);
+    long hincrBy(String key,String field,long value);
+    int hincrBy(String key,String field,int value);
+    float hincrBy(String key,String field,float value);
+    double hincrBy(String key,String field,double value);
     List<String> hkeys(String key);
     int hlen(String key);
     List<String> hget(String key,String...fields);

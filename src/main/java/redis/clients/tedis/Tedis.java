@@ -181,24 +181,31 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public long hincrBy(String key, String field, long value) {
-        client.hincrBy(key, field, value);
+        client.hincrBy(key,field,String.valueOf(value));
         return client.getLongReply();
+    }
+
+    @Override
+    public int hincrBy(String key, String field, int value) {
+        client.hincrBy(key,field,String.valueOf(value));
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public float hincrBy(String key, String field, float value) {
+        client.hincrBy(key,field,String.valueOf(value));
+        return client.getFloatReply();
+    }
+
+    @Override
+    public double hincrBy(String key, String field, double value) {
+        client.hincrBy(key,field,String.valueOf(value));
+        return client.getDoubleReply();
     }
 
     @Override
     public long hincrBy(String key, String field) {
         return hincrBy(key, field, 1L);
-    }
-
-    @Override
-    public float hincrByFloat(String key, String field, float value) {
-        client.hincrByFloat(key, field, value);
-        return client.getFloatReply();
-    }
-
-    @Override
-    public float hincrByFloat(String key, String field) {
-        return hincrByFloat(key, field, 1.0f);
     }
 
     @Override

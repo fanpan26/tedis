@@ -154,6 +154,13 @@ public class Connection implements Closeable {
         }
         return 0.0f;
     }
+    public Double getDoubleReply(){
+        String result = getBulkReply();
+        if(result != null){
+            return Double.valueOf(result);
+        }
+        return 0.0d;
+    }
 
     public Long getLongReply() {
         TedisPacket packet = getReponse();
