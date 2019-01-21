@@ -75,9 +75,8 @@ public interface Commands {
     void punsubscribe( String... channelPatterns);
     void incr( String key);
     void decr( String key);
-    void incrBy( String key,long value);
-    void incrByfloat( String key,float value);
-    void decrBy( String key,long value);
+    void incrby( String key,String value);
+    void decrby( String key,String value);
     void exists( String key);
     void del( String key);
     void quit();

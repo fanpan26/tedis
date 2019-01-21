@@ -138,12 +138,6 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public float incrByfloat(String key, float value) {
-        client.incrByfloat(key, value);
-        return client.getFloatReply();
-    }
-
-    @Override
     public int append(String key, String value) {
         client.append(key, value);
         return client.getIntegerReply();
@@ -408,10 +402,23 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public long incrBy(String key, long value) {
-        client.incrBy(key, value);
-        return client.getLongReply();
+    public long incrby(String key, long value) {
+       client.incrby(key,String.valueOf(value));
+       return client.getLongReply();
     }
+
+    @Override
+    public float incrby(String key, float value) {
+        client.incrby(key,String.valueOf(value));
+        return client.getFloatReply();
+    }
+
+    @Override
+    public double incrby(String key, double value) {
+        client.incrby(key,String.valueOf(value));
+        return client.getDoubleReply();
+    }
+
 
     @Override
     public long decr(String key) {
@@ -420,9 +427,21 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public long decrBy(String key, long value) {
-        client.decrBy(key, value);
+    public long decrby(String key, long value) {
+        client.decrby(key, String.valueOf(value));
         return client.getLongReply();
+    }
+
+    @Override
+    public float decrby(String key, float value) {
+        client.decrby(key, String.valueOf(value));
+        return client.getFloatReply();
+    }
+
+    @Override
+    public double decrby(String key, double value) {
+        client.decrby(key, String.valueOf(value));
+        return client.getDoubleReply();
     }
 
     @Override

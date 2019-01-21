@@ -1,9 +1,7 @@
 package redis.clients.tedis.test;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import redis.clients.tedis.Tedis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,12 +110,6 @@ public class StringTest extends TedisTestBase{
     }
 
     @Test
-    public void incrByfloat() {
-        float value = tedis.incrByfloat("floatKey" + System.currentTimeMillis(), 1.265f);
-        Assert.assertEquals(1.265f, value, 3);
-    }
-
-    @Test
     public void append() {
         tedis.set("appendKey", "123456");
         tedis.append("appendKey", "789");
@@ -152,7 +144,7 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void incrBy() {
-        long res = tedis.incrBy("incr_key_by", 10);
+        long res = tedis.incrby("incr_key_by", 10);
         Assert.assertEquals(true, res >= 10);
     }
 
@@ -164,7 +156,7 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void decrBy() {
-        long res = tedis.decrBy("decr_key_by", 10);
+        long res = tedis.decrby("decr_key_by", 10);
         Assert.assertEquals(true, res <= -10);
     }
 

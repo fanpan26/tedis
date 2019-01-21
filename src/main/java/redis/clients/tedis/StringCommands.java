@@ -10,9 +10,13 @@ import java.util.concurrent.TimeUnit;
  */
 public interface StringCommands {
     long incr(final String key);
-    long incrBy(final String key, long value);
+    long incrby(final String key, long value);
+    float incrby(final String key, float value);
+    double incrby(final String key, double value);
     long decr(final String key);
-    long decrBy(final String key, long value);
+    long decrby(final String key, long value);
+    float decrby(final String key, float value);
+    double decrby(final String key, double value);
     String set(String key, String value);
     String get(String key);
     String get(String key,int start,int end);
@@ -26,6 +30,5 @@ public interface StringCommands {
     String set(List<String> keys,List<String> values);
     int msetnx(List<String> keys,List<String> values);
     int len(String key);
-    float incrByfloat(String key,float value);
     int append(String key,String value);
 }

@@ -60,18 +60,6 @@ public class HashTest extends TedisTestBase{
     }
 
     @Test
-    public void hincrByFloat() {
-        float res = tedis.hincrByFloat("incryKey", "t2" + System.currentTimeMillis());
-        Assert.assertEquals(1.0f, res, 1);
-    }
-
-    @Test
-    public void hincrByFloatValue() {
-        float res = tedis.hincrByFloat("incryKey", "t2" + System.currentTimeMillis(), 10.2f);
-        Assert.assertEquals(10.2f, res, 1);
-    }
-
-    @Test
     public void hkeys(){
         tedis.hset("user1", "f1", "v1");
         tedis.hset("user1", "f2", "v2");

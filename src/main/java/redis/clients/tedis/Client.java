@@ -79,11 +79,6 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
-    public void incrByfloat(String key, float value) {
-        sendCommand(INCRBYFLOAT, key, String.valueOf(value));
-    }
-
-    @Override
     public void append(String key, String value) {
         sendCommand(APPEND, key, value);
     }
@@ -407,13 +402,13 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
-    public void incrBy(final String key, long value) {
-        sendCommand(INCRBY, key, String.valueOf(value));
+    public void incrby(final String key, String value) {
+        sendCommand(INCRBY, key, value);
     }
 
     @Override
-    public void decrBy(final String key, long value) {
-        sendCommand(DECRBY, key, String.valueOf(value));
+    public void decrby(final String key, String value) {
+        sendCommand(DECRBY, key, value);
     }
 
     @Override
