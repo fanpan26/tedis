@@ -60,12 +60,22 @@ public interface Commands {
     void sunion( String key1, String key2);;
     void sunionstore( String destination, String key1, String key2);
     void sscan( String key,long cursor, String match,int count);
-
     void zadd( String key,String... args);
     void zcard( String key);
     void zcount( String key,String min,String max);
     void zincrby( String key,String increment,String member);
     void zlexcount(String key,String min,String max);
+    void zrange(String key,String start,String stop,boolean withScore);
+    void zrank(String key,String member);
+    void zrevrank(String key,String member);
+    void zrangebyscore(String key,String min,String max,boolean withScore,int limit);
+    void zrevrangebyscore(String key,String min,String max,boolean withScore,int limit);
+    void zremrangebyscore(String key,String min,String max);
+    void zremrangebyrank(String key,String start,String stop);
+    void zrangebylex(String key,String min,String max,int limit);
+    void zrem(String key,String... members);
+    void zscore(String key,String member);
+
     void ping();
     void publish( String channel, String message);
     void subscribe( String... channels);

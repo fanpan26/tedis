@@ -175,25 +175,25 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public long hincrBy(String key, String field, long value) {
-        client.hincrBy(key,field,String.valueOf(value));
+        client.hincrBy(key, field, String.valueOf(value));
         return client.getLongReply();
     }
 
     @Override
     public int hincrBy(String key, String field, int value) {
-        client.hincrBy(key,field,String.valueOf(value));
+        client.hincrBy(key, field, String.valueOf(value));
         return client.getIntegerReply();
     }
 
     @Override
     public float hincrBy(String key, String field, float value) {
-        client.hincrBy(key,field,String.valueOf(value));
+        client.hincrBy(key, field, String.valueOf(value));
         return client.getFloatReply();
     }
 
     @Override
     public double hincrBy(String key, String field, double value) {
-        client.hincrBy(key,field,String.valueOf(value));
+        client.hincrBy(key, field, String.valueOf(value));
         return client.getDoubleReply();
     }
 
@@ -403,19 +403,19 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public long incrby(String key, long value) {
-       client.incrby(key,String.valueOf(value));
-       return client.getLongReply();
+        client.incrby(key, String.valueOf(value));
+        return client.getLongReply();
     }
 
     @Override
     public float incrby(String key, float value) {
-        client.incrby(key,String.valueOf(value));
+        client.incrby(key, String.valueOf(value));
         return client.getFloatReply();
     }
 
     @Override
     public double incrby(String key, double value) {
-        client.incrby(key,String.valueOf(value));
+        client.incrby(key, String.valueOf(value));
         return client.getDoubleReply();
     }
 
@@ -653,25 +653,25 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public long zcount(String key, float min, float max) {
-        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        client.zcount(key, String.valueOf(min), String.valueOf(max));
         return client.getLongReply();
     }
 
     @Override
     public long zcount(String key, int min, int max) {
-        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        client.zcount(key, String.valueOf(min), String.valueOf(max));
         return client.getLongReply();
     }
 
     @Override
     public long zcount(String key, long min, long max) {
-        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        client.zcount(key, String.valueOf(min), String.valueOf(max));
         return client.getLongReply();
     }
 
     @Override
     public long zcount(String key, double min, double max) {
-        client.zcount(key,String.valueOf(min),String.valueOf(max));
+        client.zcount(key, String.valueOf(min), String.valueOf(max));
         return client.getLongReply();
     }
 
@@ -706,14 +706,232 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
-    public long zlexcount(String key, long min, long max) {
-        client.zlexcount(key,String.valueOf(min),String.valueOf(max));
+    public long zlexcount(String key, String min, String max) {
+        client.zlexcount(key, "[" + min, "[" + max);
         return client.getLongReply();
     }
 
     @Override
-    public int zlexcount(String key, int min, int max) {
-        client.zlexcount(key,String.valueOf(min),String.valueOf(max));
+    public List<String> zrange(String key, long start, long end, boolean containsScore) {
+        client.zrange(key, String.valueOf(start), String.valueOf(end), containsScore);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrange(String key, int start, int end, boolean containsScore) {
+        client.zrange(key, String.valueOf(start), String.valueOf(end), containsScore);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrange(String key, long start, boolean containsScore) {
+        client.zrange(key, String.valueOf(start), "-1", containsScore);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrange(String key, int start, boolean containsScore) {
+        client.zrange(key, String.valueOf(start), "-1", containsScore);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public long zrank(String key, String member) {
+        client.zrank(key, member);
+        Long res = client.getLongReply(-1);
+        return res == -1 ? res : res + 1;
+    }
+
+    @Override
+    public long zrevrank(String key, String member) {
+        client.zrevrank(key, member);
+        Long res = client.getLongReply(-1);
+        return res == -1 ? res : res + 1;
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, int min, int max, boolean withScore, int limit) {
+        client.zrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, int min, int max) {
+        return zrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, double min, double max, boolean withScore, int limit) {
+        client.zrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, double min, double max) {
+        return zrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, float min, float max, boolean withScore, int limit) {
+        client.zrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, float min, float max) {
+        return zrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, long min, long max, boolean withScore, int limit) {
+        client.zrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key, long min, long max) {
+        return zrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public List<String> zrangebyscore(String key) {
+        client.zrangebyscore(key, "-inf", "+inf", false, 0);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key) {
+        client.zrevrangebyscore(key, "+inf", "-inf", false, 0);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, int min, int max, boolean withScore, int limit) {
+        client.zrevrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, int min, int max) {
+        return zrevrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, float min, float max, boolean withScore, int limit) {
+        client.zrevrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, float min, float max) {
+        return zrevrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, long min, long max, boolean withScore, int limit) {
+        client.zrevrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, long min, long max) {
+        return zrevrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, double min, double max, boolean withScore, int limit) {
+        client.zrevrangebyscore(key, String.valueOf(min), String.valueOf(max), withScore, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrevrangebyscore(String key, double min, double max) {
+        return zrevrangebyscore(key, min, max, false, 0);
+    }
+
+    @Override
+    public int zremrangebyscore(String key, int min, int max) {
+        client.zremrangebyscore(key, String.valueOf(min), String.valueOf(max));
         return client.getIntegerReply();
+    }
+
+    @Override
+    public int zremrangebyscore(String key, float min, float max) {
+        client.zremrangebyscore(key, String.valueOf(min), String.valueOf(max));
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public int zremrangebyscore(String key, double min, double max) {
+        client.zremrangebyscore(key, String.valueOf(min), String.valueOf(max));
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public int zremrangebyscore(String key, long min, long max) {
+        client.zremrangebyscore(key, String.valueOf(min), String.valueOf(max));
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public int zrem(String key, String... members) {
+        client.zrem(key, members);
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public float zscore(String key, String member) {
+        client.zscore(key, member);
+        return client.getFloatReply(-1f);
+    }
+
+    @Override
+    public List<String> zrangebylex(String key, String min, String max, int limit) {
+        return zrangebylex(key, min, max, limit, true, true);
+    }
+
+    @Override
+    public List<String> zrangebylex(String key, String min, String max) {
+        return zrangebylex(key, min, max, 0, true, true);
+    }
+
+    @Override
+    public List<String> zrangebylex(String key, String min, String max, int limit, boolean containsMin, boolean containsMax) {
+        client.zrangebylex(key, (containsMin ? "[" : "(") + min, (containsMax ? "[" : "(") + max, limit);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrangebylex(String key, String min, String max, boolean containsMin, boolean containsMax) {
+        return zrangebylex(key, min, max, 0, containsMin, containsMax);
+    }
+
+    @Override
+    public List<String> zrangebylex(String key, String max, boolean containsMax) {
+        client.zrangebylex(key, "-", (containsMax ? "[" : "(") + max, 0);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public List<String> zrangebylex(String key, String max) {
+        return zrangebylex(key, max, true);
+    } @Override
+    public
+    int zremrangebyrank(String key,long start,long stop) {
+        client.zremrangebyrank(key, String.valueOf(start), String.valueOf(stop));
+        return client.getIntegerReply();
+    }
+    @Override
+    public int zremrangebyrank(String key,int start,int stop){
+        client.zremrangebyrank(key, String.valueOf(start), String.valueOf(stop));
+        return client.getIntegerReply();
+    }
+    @Override
+    public int zremrangebyrank(String key,int start){
+        return zremrangebyrank(key,start,-1);
+    }
+    @Override
+    public int zremrangebyrank(String key,long start) {
+        return zremrangebyrank(key, start, -1L);
     }
 }

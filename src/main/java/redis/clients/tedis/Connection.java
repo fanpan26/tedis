@@ -154,6 +154,15 @@ public class Connection implements Closeable {
         }
         return 0.0f;
     }
+
+    public Float getFloatReply(float defaultValue){
+        String result = getBulkReply();
+        if(result != null){
+            return Float.valueOf(result);
+        }
+        return defaultValue;
+    }
+
     public Double getDoubleReply(){
         String result = getBulkReply();
         if(result != null){
@@ -168,6 +177,14 @@ public class Connection implements Closeable {
             return null;
         }
         return packet.hasLongValue() ? packet.getLongValue() : null;
+    }
+
+    public Long getLongReply(long defaultValue) {
+        Long value = getLongReply();
+        if(value == null){
+            return defaultValue;
+        }
+        return value;
     }
 
     public String getBulkReply() {

@@ -342,6 +342,81 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
+    public void zrange(String key, String start, String stop, boolean withScore) {
+        if (withScore) {
+            sendCommand(ZRANGE, key, start, stop, "WITHSCORES");
+        }else{
+            sendCommand(ZRANGE, key, start, stop);
+        }
+    }
+
+    @Override
+    public void zrank(String key, String member) {
+        sendCommand(ZRANK,key,member);
+    }
+
+    @Override
+    public void zrevrank(String key, String member) {
+        sendCommand(ZREVRANK, key, member);
+    }
+
+    @Override
+    public void zremrangebyrank(String key,String start,String stop) {
+        sendCommand(ZREMRANGEBYRANK,key,start,stop);
+    }
+
+
+    @Override
+    public void zrangebylex(String key,String min,String max,int limit) {
+        if (limit > 0) {
+            sendCommand(ZRANGEBYLEX, key, min, max, "LIMIT", "0", String.valueOf(limit));
+        } else {
+            sendCommand(ZRANGEBYLEX, key, min, max);
+        }
+    }
+
+    private void zrangebyscore(ProtocolCommand cmd,String key, String min, String max, boolean withScore, int limit){
+        if(withScore) {
+            if(limit>0) {
+                sendCommand(cmd, key, min, max, "WITHSCORES", "LIMIT", "0", String.valueOf(limit));
+            }else{
+                sendCommand(cmd, key, min, max, "WITHSCORES");
+            }
+        }else {
+            if (limit > 0) {
+                sendCommand(cmd, key, min, max, "LIMIT", "0", String.valueOf(limit));
+            } else {
+                sendCommand(cmd, key, min, max);
+            }
+        }
+    }
+
+    @Override
+    public void zrangebyscore(String key, String min, String max, boolean withScore, int limit) {
+       zrangebyscore(ZRANGEBYSCORE,key,min,max,withScore,limit);
+    }
+
+    @Override
+    public void zrevrangebyscore(String key, String min, String max, boolean withScore, int limit) {
+        zrangebyscore(ZREVRANGEBYSCORE,key,min,max,withScore,limit);
+    }
+
+    @Override
+    public void zremrangebyscore(String key,String min,String max) {
+        sendCommand(ZREMRANGEBYSCORE, key, min, max);
+    }
+
+    @Override
+    public void zrem(String key, String... members) {
+        sendCommand(ZREM,getParams(key,members));
+    }
+
+    @Override
+    public void zscore(String key, String member) {
+        sendCommand(ZSCORE,key,member);
+    }
+
+    @Override
     public void mset(String... kvs) {
         sendCommand(MSET, kvs);
     }
