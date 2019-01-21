@@ -79,6 +79,7 @@ public class BufferReader {
     }
 
     private static final byte[] EMPTY_BYTES = new byte[0];
+
     /**
      * 服务器响应信息解析
      * $号开头，例如 $5\r\nredis\r\n
@@ -95,7 +96,7 @@ public class BufferReader {
         }
 
         byte[] body = new byte[bodyLength];
-        if(bodyLength>0) {
+        if (bodyLength > 0) {
             buffer.get(body, 0, bodyLength);
         }
         //读取crlf
@@ -118,11 +119,12 @@ public class BufferReader {
     }
 
     private static final List<Object> EMPTY_LIST = new ArrayList<>(0);
+
     /**
      * 服务器响应信息解析
      * *号开头，例如 *3\r\n$3\r\nset\r\n$1\r\na\r\n$2\r\nb\r\n
      */
-    private static Object readMulityLineBody(ByteBuffer buffer) throws  AioDecodeException {
+    private static Object readMulityLineBody(ByteBuffer buffer) throws AioDecodeException {
         int count = readIntCrLf(buffer);
         if (count == -1 || count == 0) {
             return EMPTY_LIST;
@@ -154,57 +156,37 @@ public class BufferReader {
         return null;
     }
 
-    public static TedisPacket decode(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
+    public static TedisPacket decode(ByteBuffer buffer, int limit, int position, String clientName) throws AioDecodeException {
         byte first = buffer.get();
         switch (first) {
             case Protocol.PLUS_BYTE:
-                return buildPacket((byte[]) readSingleLineBody(buffer, limit, position));
+                return buildPacket((byte[]) readSingleLineBody(buffer, limit, position), clientName);
             case Protocol.DOLLAR_BYTE:
-                return buildPacket((byte[]) readFixedLengthBody(buffer));
+                return buildPacket((byte[]) readFixedLengthBody(buffer), clientName);
             case Protocol.MINUS_BYTE:
-                return errorPacket(buffer,limit,position);
+                return errorPacket((byte[]) readSingleLineBody(buffer, limit, position), clientName);
             case Protocol.ASTERISK_BYTE:
-                return buildPacket((List<Object>) readMulityLineBody(buffer));
+                return buildPacket((List<Object>) readMulityLineBody(buffer), clientName);
             case Protocol.COLON_BYTE:
-                return buildPacket(readLongCrLf(buffer));
+                return buildPacket(readLongCrLf(buffer), clientName);
         }
         //其他情况直接return null，需要确保每种情况解析正确
         return null;
     }
 
-    private static TedisPacket errorPacket(ByteBuffer buffer, int limit, int position) throws AioDecodeException {
-        byte[] res = (byte[]) readSingleLineBody(buffer, limit, position);
-        if (res == null) {
-            return null;
-        }
-        TedisPacket packet = new TedisPacket();
-        packet.setErr();
-        packet.setBody(res);
-        return packet;
+    private static TedisPacket errorPacket(byte[] error, String clientName) {
+        return ClientFactory.getErrorPacket(clientName, error);
     }
 
-    private static TedisPacket buildPacket(byte[] body) {
-        if (body == null) {
-            return null;
-        }
-        if (body.length == 0) {
-            return TedisPacket.Empty();
-        }
-        return new TedisPacket(body);
+    private static TedisPacket buildPacket(byte[] body, String clientName) {
+        return ClientFactory.getBytesPacket(clientName, body);
     }
 
-    private static TedisPacket buildPacket(long value) {
-        TedisPacket packet = new TedisPacket();
-        packet.setLongValue(value);
-        return packet;
+    private static TedisPacket buildPacket(long value, String clientName) {
+        return ClientFactory.getLongPacket(clientName, value);
     }
 
-    private static TedisPacket buildPacket(List<Object> reply) {
-        if (reply == null) {
-            return null;
-        }
-        TedisPacket packet = new TedisPacket();
-        packet.setObjects(reply);
-        return packet;
+    private static TedisPacket buildPacket(List<Object> reply, String clientName) {
+        return ClientFactory.getListPacket(clientName, reply);
     }
 }

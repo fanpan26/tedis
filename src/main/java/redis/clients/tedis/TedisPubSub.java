@@ -53,7 +53,7 @@ public abstract class TedisPubSub {
         if(channels == null || channels.length == 0){
             throw new NullPointerException("channels");
         }
-        QueueFactory.put(client.getSubscribeId());
+        ClientFactory.put(client.getSubscribeId());
     }
 
     private void  resetSubscribedChannels(List<Object> reply) {

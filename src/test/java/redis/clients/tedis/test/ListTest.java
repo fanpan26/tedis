@@ -8,14 +8,13 @@ import java.util.List;
 
 public class ListTest extends TedisTestBase {
 
-
-
     private String prepareData(String type) {
-        final String key ="tedis:"+ System.currentTimeMillis() + type;
+        final String key = generateKey(type);
         int res = tedis.lpush(key, "value1", "value2", "value3", "value4");
         Assert.assertEquals(4, res);
         return key;
     }
+
 
     @Test
     public void lpush(){

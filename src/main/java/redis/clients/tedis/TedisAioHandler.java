@@ -15,12 +15,10 @@ public class TedisAioHandler implements ClientAioHandler {
     private static final Logger logger = LoggerFactory.getLogger(TedisAioHandler.class);
 
     private String clientName;
-    private String subscribeId;
 
     public TedisAioHandler(final String clientName) {
         this.clientName = clientName;
-        this.subscribeId = clientName + "_subscribe";
-        QueueFactory.put(this.clientName);
+        ClientFactory.put(this.clientName);
     }
 
     /**
@@ -48,8 +46,8 @@ public class TedisAioHandler implements ClientAioHandler {
      */
     @Override
     public Packet decode(ByteBuffer buffer, int limit, int position, int readableLength, ChannelContext channelContext) throws AioDecodeException {
-        debug(buffer,position,readableLength);
-        return BufferReader.decode(buffer, limit, position);
+        //debug(buffer,position,readableLength);
+        return BufferReader.decode(buffer, limit, position,clientName);
     }
 
     private void debug(ByteBuffer buffer, int position, int readableLength) {
@@ -94,7 +92,7 @@ public class TedisAioHandler implements ClientAioHandler {
     public void handler(Packet packet, ChannelContext channelContext) throws Exception {
         TedisPacket responsePacket = (TedisPacket) packet;
         if (responsePacket != null) {
-            QueueFactory.get(clientName).put(responsePacket);
+            ClientFactory.get(clientName).put(responsePacket);
         }
     }
 }

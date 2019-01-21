@@ -15,8 +15,9 @@ public class TedisPacket extends Packet {
         return objects;
     }
 
-    public void setObjects(List<Object> objects) {
+    public TedisPacket setObjects(List<Object> objects) {
         this.objects = objects;
+        return this;
     }
 
     private List<Object> objects;
@@ -31,9 +32,10 @@ public class TedisPacket extends Packet {
 
     private long value;
 
-    public void setLongValue(long value) {
+    public TedisPacket setLongValue(long value) {
         this.value = value;
         longValue = true;
+        return this;
     }
 
     public long getLongValue() {
@@ -41,8 +43,9 @@ public class TedisPacket extends Packet {
     }
 
     private boolean err;
-    public void setErr(){
+    public TedisPacket setErr(){
         this.err = true;
+        return this;
     }
 
     public boolean hasErr(){
@@ -58,8 +61,9 @@ public class TedisPacket extends Packet {
     /**
      * @param body the body to set
      */
-    public void setBody(byte[] body) {
+    public TedisPacket setBody(byte[] body) {
         this.body = body;
+        return this;
     }
 
     public boolean hasBody() {

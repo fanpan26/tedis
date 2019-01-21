@@ -246,7 +246,7 @@ public class Connection implements Closeable {
     private TedisPacket getReponse() {
         for (; ; ) {
             try {
-                TedisPacket result = QueueFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
+                TedisPacket result = ClientFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
                 if (result == null) {
                     throw new TedisException("get response time out");
                 }
@@ -264,7 +264,7 @@ public class Connection implements Closeable {
     public List<Object> getSubscribeReply() {
         for (; ; ) {
             try {
-                TedisPacket packet = QueueFactory.get(clientName).take();
+                TedisPacket packet = ClientFactory.get(clientName).take();
                 if (packet == null) {
                     return null;
                 }
