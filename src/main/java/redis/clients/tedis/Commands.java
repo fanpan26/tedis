@@ -66,7 +66,6 @@ public interface Commands {
     void zcount( String key,String min,String max);
     void zincrby( String key,String increment,String member);
     void zlexcount(String key,String min,String max);
-
     void ping();
     void publish( String channel, String message);
     void subscribe( String... channels);
@@ -86,5 +85,4 @@ public interface Commands {
     void expireAt( String key,long timestamp);
     void pexpire( String key,long milliseconds);
     void pexpireAt( String key,long timestamp);
-
 }
