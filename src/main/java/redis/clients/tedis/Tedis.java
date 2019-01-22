@@ -445,6 +445,18 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
+    public int decrby(String key,int value){
+        client.decrby(key,String.valueOf(value));
+        return client.getIntegerReply();
+    }
+
+    @Override
+    public int incrby(String key,int value){
+        client.incrby(key,String.valueOf(value));
+        return client.getIntegerReply();
+    }
+
+    @Override
     public boolean del(String key) {
         client.del(key);
         return client.getIntegerReply() > 0;

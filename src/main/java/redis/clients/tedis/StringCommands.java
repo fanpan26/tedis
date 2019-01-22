@@ -11,10 +11,12 @@ import java.util.concurrent.TimeUnit;
 public interface StringCommands {
     long incr(final String key);
     long incrby(final String key, long value);
+    int incrby(final String key,int value);
     float incrby(final String key, float value);
     double incrby(final String key, double value);
     long decr(final String key);
     long decrby(final String key, long value);
+    int decrby(final String key,int value);
     float decrby(final String key, float value);
     double decrby(final String key, double value);
     String set(String key, String value);
