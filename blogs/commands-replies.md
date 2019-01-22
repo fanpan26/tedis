@@ -104,3 +104,34 @@
 <br/>计算给定的一个或多个有序集的并集，并存储在新的 key 中
 * 20 `ZSCAN key cursor [MATCH pattern] [COUNT count]` 
 <br/>迭代有序集合中的元素（包括元素成员和元素分值）
+## SET
+* 1	`SADD key member1 [member2] `
+<br/>向集合添加一个或多个成员
+* 2	`SCARD key` 
+<br/>获取集合的成员数
+* 3	`SDIFF key1 [key2] `
+<br/>返回给定所有集合的差集
+* 4	`SDIFFSTORE destination key1 [key2] `
+<br/>返回给定所有集合的差集并存储在 destination 中
+* 5	`SINTER key1 [key2]` 
+<br/>返回给定所有集合的交集
+* 6	`SINTERSTORE destination key1 [key2]` 
+<br/>返回给定所有集合的交集并存储在 destination 中
+* 7	`SISMEMBER key member` 
+<br/>判断 member 元素是否是集合 key 的成员
+* 8	`SMEMBERS key` 
+<br/>返回集合中的所有成员
+* 9	`SMOVE source destination member` 
+<br/>将 member 元素从 source 集合移动到 destination 集合
+* 10 `SPOP key` 
+<br/>移除并返回集合中的一个随机元素
+* 11 `SRANDMEMBER key [count]` 
+<br/>返回集合中一个或多个随机数
+* 12 `SREM key member1 [member2]` 
+<br/>移除集合中一个或多个成员
+* 13 `SUNION key1 [key2]` 
+<br/>返回所有给定集合的并集
+* 14 `SUNIONSTORE destination key1 [key2]` 
+<br/>所有给定集合的并集存储在 destination 集合中
+* 15 `SSCAN key cursor [MATCH pattern] [COUNT count]` 
+<br/>迭代集合中的元素
