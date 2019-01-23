@@ -12,7 +12,6 @@ public class BufferReader {
     public static boolean isCr(byte b) {
         return b == Protocol.CR;
     }
-
     public static boolean isLf(byte b) {
         return b == Protocol.LF;
     }
