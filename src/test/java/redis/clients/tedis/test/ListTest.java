@@ -18,7 +18,7 @@ public class ListTest extends TedisTestBase {
 
     @Test
     public void lpush(){
-        final String key =System.currentTimeMillis()+"lpushKey";
+        String key =generateKey("lpush");
         int res = tedis.lpush(key,"panzi","xiaoming","zhangsan");
         Assert.assertEquals(3,res);
     }
@@ -72,7 +72,7 @@ public class ListTest extends TedisTestBase {
 
     @Test
     public void rpush(){
-        final String key =System.currentTimeMillis()+"rpushKey";
+        final String key = generateKey("rpush");
         int res = tedis.rpush(key,"panzi","xiaoming","zhangsan");
         Assert.assertEquals(3,res);
     }
@@ -92,10 +92,10 @@ public class ListTest extends TedisTestBase {
     }
 
     @Test
-    public void lpushxNotExists(){
-        final String key =System.currentTimeMillis()+"lpushx";
-        int res = tedis.lpushx(key,"panzi");
-        Assert.assertEquals(0,res);
+    public void lpushxNotExists() {
+        final String key = generateKey("lpushx");
+        int res = tedis.lpushx(key, "panzi");
+        Assert.assertEquals(0, res);
     }
 
     @Test
