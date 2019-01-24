@@ -11,15 +11,17 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void getRange() {
-        tedis.set("getRangeTest", "test123456789");
-        String res = tedis.get("getRangeTest", 0, 5);
+        String key = generateKey("getrange");
+        tedis.set(key, "test123456789");
+        String res = tedis.get(key, 0, 5);
         Assert.assertEquals("test12", res);
     }
 
     @Test
     public void getset() {
-        tedis.set("getsetTest", "test");
-        String res = tedis.getset("getsetTest", "newtest");
+        String key = generateKey("getset");
+        tedis.set(key, "test");
+        String res = tedis.getset(key, "newtest");
         Assert.assertEquals("test", res);
     }
 
@@ -33,7 +35,8 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void setbit() {
-        int res1 = tedis.setbit("setbitTest1", 6, true);
+        String key = generateKey("setbit");
+        int res1 = tedis.setbit(key, 6, true);
         Assert.assertEquals(true, res1 >= 0);
     }
 
@@ -49,8 +52,9 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void setex() {
-       String res = tedis.setex("setExKey", "test", 2, TimeUnit.SECONDS);
-       Assert.assertEquals("OK",res);
+        String key = generateKey("setex");
+        String res = tedis.setex(key, "test", 2, TimeUnit.SECONDS);
+        Assert.assertEquals("OK", res);
     }
 
     @Test
@@ -80,15 +84,17 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void strlen() {
-        tedis.set("lenKey", "123456");
-        int len = tedis.len("lenKey");
+        String key  =generateKey("strlen");
+        tedis.set(key, "123456");
+        int len = tedis.len(key);
         Assert.assertEquals(6, len);
     }
 
     @Test
     public void setrange() {
-        tedis.set("rangeKey", "123456");
-        int res = tedis.set("rangeKey", "123456", 3);
+        String key = generateKey("setrange");
+        tedis.set(key, "123456");
+        int res = tedis.set(key, "123456", 3);
         Assert.assertEquals(9, res);
     }
 
@@ -111,14 +117,16 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void append() {
-        tedis.set("appendKey", "123456");
-        tedis.append("appendKey", "789");
-        Assert.assertEquals("123456789", tedis.get("appendKey"));
+        String key = generateKey("append");
+        tedis.set(key, "123456");
+        tedis.append(key, "789");
+        Assert.assertEquals("123456789", tedis.get(key));
     }
 
     @Test
     public void set() {
-        String result = tedis.set("test", "test");
+        String key = generateKey("set");
+        String result = tedis.set(key, "test");
         Assert.assertEquals("OK", result);
     }
 
@@ -126,51 +134,51 @@ public class StringTest extends TedisTestBase{
     public void get() {
         String key = generateKey("get");
         tedis.set(key,"testValue");
-       String res = tedis.get(key);
+        String res = tedis.get(key);
         Assert.assertEquals("testValue", res);
     }
 
     @Test
-    public void getEmpty(){
-        String result = tedis.set("test1","");
-        String result1=tedis.get("test1");
-    }
-
-    @Test
     public void incr() {
-        long res = tedis.incr("incr_key");
+        String key =generateKey("incr");
+        long res = tedis.incr(key);
         Assert.assertEquals(true, res > 0);
     }
 
     @Test
     public void incrBy() {
-        long res = tedis.incrby("incr_key_by", 10);
+        String key = generateKey("incrby");
+        long res = tedis.incrby(key, 10);
         Assert.assertEquals(true, res >= 10);
     }
 
     @Test
     public void decr() {
-        long res = tedis.decr("decr_key");
+        String key = generateKey("decr");
+        long res = tedis.decr(key);
         Assert.assertEquals(true, res < 0);
     }
 
     @Test
     public void decrBy() {
-        long res = tedis.decrby("decr_key_by", 10);
-        Assert.assertEquals(true, res <= -10);
+        String key = generateKey("decrby");
+        long res = tedis.decrby(key, 1);
+        Assert.assertEquals(-1, res);
     }
 
     @Test
     public void exists() {
-        tedis.set("exist_key", "1");
-        boolean res = tedis.exists("exist_key");
+        String key = generateKey("exists");
+        tedis.set(key, "1");
+        boolean res = tedis.exists(key);
         Assert.assertEquals(true, res);
     }
 
     @Test
     public void del() {
-        tedis.set("delKey", "1");
-        boolean res = tedis.del("delKey");
+        String key = generateKey("del");
+        tedis.set(key, "1");
+        boolean res = tedis.del(key);
         Assert.assertEquals(true, res);
     }
 
