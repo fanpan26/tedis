@@ -44,9 +44,6 @@ public final class Protocol {
             appendCrLf(builder);
         }
         //最后转换为 byte[],此处使用  Jedis 中的 SafeEncoder
-        System.out.println("*  "+cmd.getName());
-        System.out.println("```");
-        System.out.println(builder.toString().replaceAll("\r\n","\\\\r\\\\n"));
         return SafeEncoder.encode(builder.toString());
 
     }

@@ -1,14 +1,7 @@
 package redis.clients.tedis.test;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import redis.clients.tedis.Tedis;
-
-import java.sql.SQLSyntaxErrorException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class TedisTest extends TedisTestBase{
 

@@ -13,49 +13,56 @@ public class HashTest extends TedisTestBase{
 
     @Test
     public void hashset() {
-        int res = tedis.hset("user", "name1", "panzi1");
+        String key = generateKey("hashset");
+        int res = tedis.hset(key, "name1", "panzi1");
         Assert.assertEquals(true, res >= 0);
     }
 
     @Test
     public void hashExist() {
-        tedis.hset("user", "existkey", "value");
-        boolean res = tedis.hexists("user", "existkey");
+        String key = generateKey("hashexist");
+        tedis.hset(key, "existkey", "value");
+        boolean res = tedis.hexists(key, "existkey");
         Assert.assertEquals(true, res);
     }
 
     @Test
     public void hashGet() {
-        tedis.hset("user", "getkey", "value");
-        String res = tedis.hget("user", "getkey");
+        String key = generateKey("hashget");
+        tedis.hset(key, "getkey", "value");
+        String res = tedis.hget(key, "getkey");
         Assert.assertEquals("value", res);
     }
 
     @Test
     public void hgetAll() {
-        tedis.hset("user1", "f1", "v1");
-        tedis.hset("user1", "f2", "v2");
-        tedis.hset("user1", "f3", "v3");
-        java.util.Map<String, String> map = tedis.hget("user1");
+        String key = generateKey("hgetall");
+        tedis.hset(key, "f1", "v1");
+        tedis.hset(key, "f2", "v2");
+        tedis.hset(key, "f3", "v3");
+        java.util.Map<String, String> map = tedis.hget(key);
         Assert.assertEquals(3, map.size());
     }
 
     @Test
     public void hashDel() {
-        tedis.hset("user", "delkey", "value");
-        boolean res = tedis.hdel("user", "delkey");
+        String key = generateKey("hdel");
+        tedis.hset(key, "delkey", "value");
+        boolean res = tedis.hdel(key, "delkey");
         Assert.assertEquals(true, res);
     }
 
     @Test
     public void hincrBy() {
-        long res = tedis.hincrBy("incryKey", "t1" + System.currentTimeMillis());
+        String key = generateKey("hincrby");
+        long res = tedis.hincrBy(key, "t1" );
         Assert.assertEquals(1L, res);
     }
 
     @Test
     public void hincrByValue() {
-        long res = tedis.hincrBy("incryKey", "t1" + System.currentTimeMillis(), 10L);
+        String key = generateKey("hincrby");
+        long res = tedis.hincrBy(key, "t1", 10L);
         Assert.assertEquals(10L, res);
     }
 
@@ -120,9 +127,10 @@ public class HashTest extends TedisTestBase{
 
     @Test
     public void hsetnx() {
-        String randomKey = "f1" + System.currentTimeMillis();
-        boolean res1 = tedis.hsetnx("user6", randomKey, "v1");
-        boolean res2 = tedis.hsetnx("user6", randomKey, "v2");
+        String key = generateKey("hsetnx");
+        String key1 = generateKey("hsetnx");
+        boolean res1 = tedis.hsetnx(key1, key, "v1");
+        boolean res2 = tedis.hsetnx(key1, key, "v2");
 
         Assert.assertEquals(true,res1);
         Assert.assertEquals(false,res2);
