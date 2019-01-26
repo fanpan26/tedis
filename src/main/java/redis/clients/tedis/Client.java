@@ -3,6 +3,13 @@ package redis.clients.tedis;
 import java.util.List;
 
 import static redis.clients.tedis.Command.*;
+import static redis.clients.tedis.Command.EXISTS;
+import static redis.clients.tedis.Command.GET;
+import static redis.clients.tedis.Command.PING;
+import static redis.clients.tedis.Command.PSUBSCRIBE;
+import static redis.clients.tedis.Command.PUNSUBSCRIBE;
+import static redis.clients.tedis.Command.SUBSCRIBE;
+import static redis.clients.tedis.Command.UNSUBSCRIBE;
 import static redis.clients.tedis.Keyword.*;
 
 public class Client extends Connection implements Commands,ScriptingCommands {
