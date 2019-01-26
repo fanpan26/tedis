@@ -3,6 +3,7 @@ package redis.clients.tedis;
 import java.util.List;
 
 import static redis.clients.tedis.Command.*;
+import static redis.clients.tedis.Keyword.*;
 
 public class Client extends Connection implements Commands,ScriptingCommands {
     public Client() {
@@ -165,7 +166,7 @@ public class Client extends Connection implements Commands,ScriptingCommands {
 
     @Override
     public void linsert(String key, boolean before, String pivot, String value) {
-        sendCommand(LINSERT, key, before ? "BEFORE" : "AFTER", pivot, value);
+        sendCommand(LINSERT, key, before ? BEFORE.name() : AFTER.name(), pivot, value);
     }
 
     @Override
@@ -303,13 +304,13 @@ public class Client extends Connection implements Commands,ScriptingCommands {
         boolean hasMatch = match != null && match.length() > 0;
         if (count > 0) {
             if (hasMatch) {
-                sendCommand(SSCAN, key, String.valueOf(cursor), "MATCH", match, "COUNT", String.valueOf(count));
+                sendCommand(SSCAN, key, String.valueOf(cursor), MATCH.name(), match, COUNT.name(), String.valueOf(count));
             } else {
-                sendCommand(SSCAN, key, String.valueOf(cursor), "COUNT", String.valueOf(count));
+                sendCommand(SSCAN, key, String.valueOf(cursor), COUNT.name(), String.valueOf(count));
             }
         } else {
             if (hasMatch) {
-                sendCommand(SSCAN, key, String.valueOf(cursor), "match", match);
+                sendCommand(SSCAN, key, String.valueOf(cursor), MATCH.name(), match);
             } else {
                 sendCommand(SSCAN, key, String.valueOf(cursor));
             }
@@ -344,7 +345,7 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     @Override
     public void zrange(String key, String start, String stop, boolean withScore) {
         if (withScore) {
-            sendCommand(ZRANGE, key, start, stop, "WITHSCORES");
+            sendCommand(ZRANGE, key, start, stop, WITHSCORES.name());
         }else{
             sendCommand(ZRANGE, key, start, stop);
         }
@@ -369,7 +370,7 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     @Override
     public void zrangebylex(String key,String min,String max,int limit) {
         if (limit > 0) {
-            sendCommand(ZRANGEBYLEX, key, min, max, "LIMIT", "0", String.valueOf(limit));
+            sendCommand(ZRANGEBYLEX, key, min, max, LIMIT.name(), "0", String.valueOf(limit));
         } else {
             sendCommand(ZRANGEBYLEX, key, min, max);
         }
@@ -378,13 +379,13 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     private void zrangebyscore(ProtocolCommand cmd,String key, String min, String max, boolean withScore, int limit){
         if(withScore) {
             if(limit>0) {
-                sendCommand(cmd, key, min, max, "WITHSCORES", "LIMIT", "0", String.valueOf(limit));
+                sendCommand(cmd, key, min, max, WITHSCORES.name(), LIMIT.name(), "0", String.valueOf(limit));
             }else{
-                sendCommand(cmd, key, min, max, "WITHSCORES");
+                sendCommand(cmd, key, min, max,  WITHSCORES.name());
             }
         }else {
             if (limit > 0) {
-                sendCommand(cmd, key, min, max, "LIMIT", "0", String.valueOf(limit));
+                sendCommand(cmd, key, min, max, LIMIT.name(), "0", String.valueOf(limit));
             } else {
                 sendCommand(cmd, key, min, max);
             }
