@@ -1,20 +1,16 @@
 package redis.clients.tedis;
 
 
-public interface TedisCommands extends StringCommands,
+public interface TedisCommands extends KeyCommands,
+        StringCommands,
         SetCommands,
         HashCommands,
         ListCommands,
         SortedSetCommands,
         PubSubCommands{
-    boolean exists(final String key);
-    boolean del(final String key);
+
     String ping();
     void quit();
     String flush();
     String selectDb(int db);
-    boolean expire(final String key,long seconds);
-    boolean pexpire(final String key,long milliseconds);
-    boolean expireAt(final String key,long timestamp);
-    boolean pexpireAt(final String key,long timestamp);
 }
