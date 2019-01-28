@@ -54,6 +54,7 @@ public class TedisAioHandler implements ClientAioHandler {
         byte[] body = new byte[readableLength - 2];
         buffer.get(body);
         buffer.position(position);
+        System.out.println(new String(body));
     }
 
     /**
