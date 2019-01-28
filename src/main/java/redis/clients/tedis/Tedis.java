@@ -463,6 +463,66 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
+    public String dump(String key) {
+       client.dump(key);
+       return client.getBulkReply();
+    }
+
+    @Override
+    public List<String> keys(String pattern) {
+        client.keys(pattern);
+        return client.getListStringReply();
+    }
+
+    @Override
+    public boolean move(String key, int db) {
+       client.move(key,db);
+       return client.getBooleanReply();
+    }
+
+    @Override
+    public boolean persist(String key) {
+       client.persist(key);
+       return client.getBooleanReply();
+    }
+
+    @Override
+    public long pttl(String key) {
+       client.pttl(key);
+       return client.getLongReply();
+    }
+
+    @Override
+    public long ttl(String key) {
+      client.ttl(key);
+      return client.getLongReply();
+    }
+
+    @Override
+    public String randomkey() {
+       client.randomkey();
+       return client.getBulkReply();
+    }
+
+    @Override
+    public String rename(String key, String newKey) {
+        client.rename(key,newKey);
+        return client.getBulkReply();
+    }
+
+    @Override
+    public String renamenx(String key, String newKey) {
+        client.renamenx(key,newKey);
+        return client.getStatusCodeReply();
+    }
+
+    @Override
+    public String type(String key) {
+        client.type(key);
+        return client.getStatusCodeReply();
+    }
+
+    @Override
     public boolean exists(String key) {
         client.exists(key);
         return client.getBooleanReply();
