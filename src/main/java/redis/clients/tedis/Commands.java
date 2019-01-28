@@ -75,7 +75,6 @@ public interface Commands {
     void zrangebylex(String key,String min,String max,int limit);
     void zrem(String key,String... members);
     void zscore(String key,String member);
-
     void ping();
     void publish( String channel, String message);
     void subscribe( String... channels);
@@ -95,4 +94,14 @@ public interface Commands {
     void expireAt( String key,long timestamp);
     void pexpire( String key,long milliseconds);
     void pexpireAt( String key,long timestamp);
+    void dump(String key);
+    void keys(String pattern);
+    void move(String key,int db);
+    void persist(String key);
+    void pttl(String key);
+    void ttl(String key);
+    void randomkey();
+    void rename(String key,String newKey);
+    void renamenx(String key,String newKey);
+    void type(String key);
 }
