@@ -540,6 +540,56 @@ public class Client extends Connection implements Commands,ScriptingCommands {
     }
 
     @Override
+    public void dump(String key) {
+        sendCommand(DUMP,key);
+    }
+
+    @Override
+    public void keys(String pattern) {
+        sendCommand(Command.KEYS,pattern);
+    }
+
+    @Override
+    public void move(String key, int db) {
+        sendCommand(MOVE, key, String.valueOf(db));
+    }
+
+    @Override
+    public void persist(String key) {
+        sendCommand(PERSIST,key);
+    }
+
+    @Override
+    public void pttl(String key) {
+        sendCommand(PTTL,key);
+    }
+
+    @Override
+    public void ttl(String key) {
+        sendCommand(TTL,key);
+    }
+
+    @Override
+    public void randomkey() {
+        sendCommand(RANDOMKEY);
+    }
+
+    @Override
+    public void rename(String key, String newKey) {
+        sendCommand(RENAME,key,newKey);
+    }
+
+    @Override
+    public void renamenx(String key, String newKey) {
+        sendCommand(RENAMENX,key,newKey);
+    }
+
+    @Override
+    public void type(String key) {
+        sendCommand(TYPE,key);
+    }
+
+    @Override
     public Boolean scriptExists(String sha1) {
         return null;
     }
