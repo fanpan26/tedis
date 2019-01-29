@@ -1,7 +1,5 @@
 package redis.clients.tedis;
 
-import org.tio.core.Tio;
-
 
 public final class TedisOutputStream {
     protected final byte[] buf;
