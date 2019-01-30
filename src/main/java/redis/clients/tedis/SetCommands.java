@@ -9,6 +9,10 @@ import java.util.List;
  */
 public interface SetCommands {
     long sadd(final String key,String... members);
+    long sadd(final String key,long... members);
+    long sadd(final String key,int... members);
+    long sadd(final String key,double... members);
+    long sadd(final String key,float... members);
     long scard(final String key);
     List<String> sdiff(final String key1, final String key2);
     long sdiffstore(final String destination,final String key1,final String key2);

@@ -662,6 +662,35 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         return client.getLongReply();
     }
 
+
+    private String[] getParams(Object... members){
+        String[] args = new String[members.length];
+        for (int i=0;i<members.length;i++){
+            args[i] = String.valueOf(members[i]);
+        }
+        return args;
+    }
+
+    @Override
+    public long sadd(String key, long... members) {
+        return sadd(key, getParams(members));
+    }
+
+    @Override
+    public long sadd(String key, int... members) {
+        return sadd(key, getParams(members));
+    }
+
+    @Override
+    public long sadd(String key, double... members) {
+        return sadd(key, getParams(members));
+    }
+
+    @Override
+    public long sadd(String key, float... members) {
+        return sadd(key, getParams(members));
+    }
+
     @Override
     public long scard(String key) {
         client.scard(key);
@@ -796,25 +825,25 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     @Override
     public long zincrby(String key, long increment, String member) {
         client.zincrby(key, String.valueOf(increment), member);
-        return Long.valueOf(client.getBulkReply()).longValue();
+        return client.getLongReply();
     }
 
     @Override
     public int zincrby(String key, int increment, String member) {
         client.zincrby(key, String.valueOf(increment), member);
-        return Integer.valueOf(client.getBulkReply()).intValue();
+        return client.getIntegerReply();
     }
 
     @Override
     public double zincrby(String key, double increment, String member) {
         client.zincrby(key, String.valueOf(increment), member);
-        return Double.valueOf(client.getBulkReply()).doubleValue();
+        return client.getDoubleReply();
     }
 
     @Override
     public float zincrby(String key, float increment, String member) {
         client.zincrby(key, String.valueOf(increment), member);
-        return Float.valueOf(client.getBulkReply()).floatValue();
+        return   return client.getFloatReply();
     }
 
     @Override
