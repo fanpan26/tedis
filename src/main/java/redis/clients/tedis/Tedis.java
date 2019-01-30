@@ -843,7 +843,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     @Override
     public float zincrby(String key, float increment, String member) {
         client.zincrby(key, String.valueOf(increment), member);
-        return   return client.getFloatReply();
+        return client.getFloatReply();
     }
 
     @Override
