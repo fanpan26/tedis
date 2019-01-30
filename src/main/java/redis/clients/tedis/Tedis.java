@@ -36,6 +36,26 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
+    public String set(String key, long value) {
+        return set(key,String.valueOf(value));
+    }
+
+    @Override
+    public String set(String key, int value) {
+        return set(key,String.valueOf(value));
+    }
+
+    @Override
+    public String set(String key, double value) {
+        return set(key,String.valueOf(value));
+    }
+
+    @Override
+    public String set(String key, float value) {
+        return set(key,String.valueOf(value));
+    }
+
+    @Override
     public String get(String key) {
         client.get(key);
         return client.getBulkReply();
@@ -60,6 +80,26 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
     }
 
     @Override
+    public String getset(String key, long value) {
+        return getset(key,String.valueOf(value));
+    }
+
+    @Override
+    public String getset(String key, int value) {
+        return getset(key,String.valueOf(value));
+    }
+
+    @Override
+    public String getset(String key, float value) {
+        return getset(key,String.valueOf(value));
+    }
+
+    @Override
+    public String getset(String key, double value) {
+        return getset(key,String.valueOf(value));
+    }
+
+    @Override
     public int getbit(String key, int offset) {
         client.getbit(key, offset);
         return client.getIntegerReply();
@@ -76,13 +116,13 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         long expires = 0;
         switch (unit) {
             case DAYS:
-                expires = time * 24 * 3600 * 1000;
+                expires = time * 86400000;
                 break;
             case HOURS:
-                expires = time * 3600 * 1000;
+                expires = time * 3600000;
                 break;
             case MINUTES:
-                expires = time * 60 * 1000;
+                expires = time * 60000;
                 break;
             case SECONDS:
                 expires = time * 1000;
