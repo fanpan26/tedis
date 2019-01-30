@@ -20,9 +20,17 @@ public interface StringCommands {
     float decrby(final String key, float value);
     double decrby(final String key, double value);
     String set(String key, String value);
+    String set(String key,long value);
+    String set(String key,int value);
+    String set(String key,double value);
+    String set(String key,float value);
     String get(String key);
     String get(String key,int start,int end);
     String getset(String key,String value);
+    String getset(String key,long value);
+    String getset(String key,int value);
+    String getset(String key,float value);
+    String getset(String key,double value);
     int getbit(String key,int offset);
     int setbit(String key,int offset,boolean value);
     List<String> get(String...keys);
