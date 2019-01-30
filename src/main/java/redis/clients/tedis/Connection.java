@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * */
 public class Connection implements Closeable {
 
-    private static int CLIENT_INDEX = 0;
+    private static volatile int CLIENT_INDEX = 0;
 
     public String getClientName() {
         return clientName;
