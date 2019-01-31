@@ -12,7 +12,9 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     private static Logger logger = LoggerFactory.getLogger(Tedis.class);
 
-    private TedisLock tedisLock;
+    private static final int DEFAULT_LIMIT = 0;
+    private static final String BRACKETS_CONTAINS = "[";
+    private static final String BRACKETS_NOT_CONTAINS = "(";
 
     private Client client;
 
@@ -26,7 +28,6 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
         } else {
             client = new Client(host, port);
         }
-        tedisLock = new DefaultTedisLock(client);
     }
 
     @Override
@@ -848,7 +849,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public long zlexcount(String key, String min, String max) {
-        client.zlexcount(key, "[" + min, "[" + max);
+        client.zlexcount(key, BRACKETS_CONTAINS + min, BRACKETS_CONTAINS + max);
         return client.getLongReply();
     }
 
@@ -898,7 +899,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrangebyscore(String key, int min, int max) {
-        return zrangebyscore(key, min, max, false, 0);
+        return zrangebyscore(key, min, max, false, DEFAULT_LIMIT);
     }
 
     @Override
@@ -909,7 +910,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrangebyscore(String key, double min, double max) {
-        return zrangebyscore(key, min, max, false, 0);
+        return zrangebyscore(key, min, max, false, DEFAULT_LIMIT);
     }
 
     @Override
@@ -920,7 +921,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrangebyscore(String key, float min, float max) {
-        return zrangebyscore(key, min, max, false, 0);
+        return zrangebyscore(key, min, max, false, DEFAULT_LIMIT);
     }
 
     @Override
@@ -931,18 +932,18 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrangebyscore(String key, long min, long max) {
-        return zrangebyscore(key, min, max, false, 0);
+        return zrangebyscore(key, min, max, false, DEFAULT_LIMIT);
     }
 
     @Override
     public List<String> zrangebyscore(String key) {
-        client.zrangebyscore(key, "-inf", "+inf", false, 0);
+        client.zrangebyscore(key, "-inf", "+inf", false, DEFAULT_LIMIT);
         return client.getListStringReply();
     }
 
     @Override
     public List<String> zrevrangebyscore(String key) {
-        client.zrevrangebyscore(key, "+inf", "-inf", false, 0);
+        client.zrevrangebyscore(key, "+inf", "-inf", false, DEFAULT_LIMIT);
         return client.getListStringReply();
     }
 
@@ -965,7 +966,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrevrangebyscore(String key, float min, float max) {
-        return zrevrangebyscore(key, min, max, false, 0);
+        return zrevrangebyscore(key, min, max, false, DEFAULT_LIMIT);
     }
 
     @Override
@@ -976,7 +977,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrevrangebyscore(String key, long min, long max) {
-        return zrevrangebyscore(key, min, max, false, 0);
+        return zrevrangebyscore(key, min, max, false, DEFAULT_LIMIT);
     }
 
     @Override
@@ -987,7 +988,7 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrevrangebyscore(String key, double min, double max) {
-        return zrevrangebyscore(key, min, max, false, 0);
+        return zrevrangebyscore(key, min, max, false, DEFAULT_LIMIT);
     }
 
     @Override
@@ -1033,23 +1034,23 @@ public class Tedis  implements TedisCommands,ScriptingCommands {
 
     @Override
     public List<String> zrangebylex(String key, String min, String max) {
-        return zrangebylex(key, min, max, 0, true, true);
+        return zrangebylex(key, min, max, DEFAULT_LIMIT, true, true);
     }
 
     @Override
     public List<String> zrangebylex(String key, String min, String max, int limit, boolean containsMin, boolean containsMax) {
-        client.zrangebylex(key, (containsMin ? "[" : "(") + min, (containsMax ? "[" : "(") + max, limit);
+        client.zrangebylex(key, (containsMin ?  BRACKETS_CONTAINS : BRACKETS_NOT_CONTAINS) + min, (containsMax ?  BRACKETS_CONTAINS : BRACKETS_NOT_CONTAINS) + max, limit);
         return client.getListStringReply();
     }
 
     @Override
     public List<String> zrangebylex(String key, String min, String max, boolean containsMin, boolean containsMax) {
-        return zrangebylex(key, min, max, 0, containsMin, containsMax);
+        return zrangebylex(key, min, max, DEFAULT_LIMIT, containsMin, containsMax);
     }
 
     @Override
     public List<String> zrangebylex(String key, String max, boolean containsMax) {
-        client.zrangebylex(key, "-", (containsMax ? "[" : "(") + max, 0);
+        client.zrangebylex(key, "-", (containsMax ? BRACKETS_CONTAINS : BRACKETS_NOT_CONTAINS) + max, DEFAULT_LIMIT);
         return client.getListStringReply();
     }
 
