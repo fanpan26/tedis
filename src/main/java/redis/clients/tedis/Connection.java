@@ -176,7 +176,13 @@ public class Connection implements Closeable {
         if (packet == null) {
             return null;
         }
-        return packet.hasLongValue() ? packet.getLongValue() : null;
+        if (packet.hasLongValue()){
+            return packet.getLongValue();
+        }
+        if (packet.hasBody()){
+           return Long.valueOf(SafeEncoder.encode(packet.getBody()));
+        }
+        return null;
     }
 
     public Long getLongReply(long defaultValue) {

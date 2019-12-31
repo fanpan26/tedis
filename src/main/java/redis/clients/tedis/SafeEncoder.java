@@ -17,9 +17,6 @@ public final class SafeEncoder {
 
     public static byte[] encode(final String str) {
         try {
-            if (str == null) {
-                throw new TedisException("value sent to redis cannot be null");
-            }
             return str.getBytes(Protocol.CHARSET);
         } catch (UnsupportedEncodingException e) {
             throw new TedisException(e);
