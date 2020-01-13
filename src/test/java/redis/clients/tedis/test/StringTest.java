@@ -10,6 +10,16 @@ import java.util.concurrent.TimeUnit;
 public class StringTest extends TedisTestBase{
 
     @Test
+    public void setManyDemo() {
+        String result = tedis.set("name", "didi");
+        String result1 = tedis.set("name", "didi");
+        String result2= tedis.set("name", "didi");
+        String result3 = tedis.set("name", "didi");
+        String result4 = tedis.set("name", "didi");
+        Assert.assertEquals("OK", result);
+    }
+
+    @Test
     public void getRange() {
         String key = generateKey("getrange");
         tedis.set(key, "test123456789");
@@ -125,10 +135,10 @@ public class StringTest extends TedisTestBase{
 
     @Test
     public void set() {
-        String key = generateKey("set");
-        String result = tedis.set(key, "test");
+        String result = tedis.set("name", "didi");
         Assert.assertEquals("OK", result);
     }
+
 
     @Test
     public void get() {

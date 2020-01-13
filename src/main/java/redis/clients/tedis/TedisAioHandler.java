@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioHandler;
 import org.tio.core.ChannelContext;
-import org.tio.core.GroupContext;
+import org.tio.core.TioConfig;
 import org.tio.core.exception.AioDecodeException;
 import org.tio.core.intf.Packet;
 
@@ -21,16 +21,6 @@ public class TedisAioHandler implements ClientAioHandler {
         ClientFactory.put(this.clientName);
     }
 
-    /**
-     * 创建心跳包
-     *
-     * @return
-     * @author tanyaowu
-     */
-    @Override
-    public Packet heartbeatPacket() {
-        return null;
-    }
 
     /**
      * 根据ByteBuffer解码成业务需要的Packet对象.
@@ -61,13 +51,13 @@ public class TedisAioHandler implements ClientAioHandler {
      * 编码
      *
      * @param packet
-     * @param groupContext
+     * @param tioConfig
      * @param channelContext
      * @return
      * @author: tanyaowu
      */
     @Override
-    public ByteBuffer encode(Packet packet, GroupContext groupContext, ChannelContext channelContext) {
+    public ByteBuffer encode(Packet packet, TioConfig tioConfig, ChannelContext channelContext) {
         TedisPacket tedisPacket = (TedisPacket) packet;
         byte[] body = tedisPacket.getBody();
         int bodyLen = 0;
@@ -93,5 +83,17 @@ public class TedisAioHandler implements ClientAioHandler {
         if (responsePacket != null) {
             ClientFactory.get(clientName).put(responsePacket);
         }
+    }
+
+    /**
+     * 创建心跳包
+     *
+     * @param channelContext
+     * @return
+     * @author tanyaowu
+     */
+    @Override
+    public Packet heartbeatPacket(ChannelContext channelContext) {
+        return null;
     }
 }

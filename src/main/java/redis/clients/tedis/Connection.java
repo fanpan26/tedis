@@ -1,7 +1,7 @@
 package redis.clients.tedis;
 
 import org.tio.client.ClientChannelContext;
-import org.tio.client.ClientGroupContext;
+import org.tio.client.ClientTioConfig;
 import org.tio.client.ReconnConf;
 import org.tio.client.TioClient;
 import org.tio.client.intf.ClientAioHandler;
@@ -39,7 +39,7 @@ public class Connection implements Closeable {
     private Node serverNode;
     //handler, 包括编码、解码、消息处理
     private ClientAioHandler handler;
-    private ClientGroupContext clientGroupContext;
+    private ClientTioConfig clientTioConfig;
     //事件监听器
     private ClientAioListener listener = new TedisAioListener() ;
     //断链后自动连接的，不想自动连接请设为null
@@ -58,8 +58,8 @@ public class Connection implements Closeable {
         serverNode = new Node(this.host, this.port);
         clientName = buildClientName();
         handler = new TedisAioHandler(clientName);
-        clientGroupContext = new ClientGroupContext(handler, listener, reconnConf);
-        clientGroupContext.setName(clientName);
+        clientTioConfig = new ClientTioConfig(handler, listener, reconnConf);
+        clientTioConfig.setName(clientName);
     }
 
     private String buildClientName() {
@@ -68,8 +68,8 @@ public class Connection implements Closeable {
 
     public void connect() throws Exception {
         if (!isConnected()) {
-            clientGroupContext.setHeartbeatTimeout(0);
-            tioClient = new TioClient(clientGroupContext);
+            clientTioConfig.setHeartbeatTimeout(0);
+            tioClient = new TioClient(clientTioConfig);
             clientChannelContext = tioClient.connect(serverNode);
             isConnected = true;
         }
@@ -274,20 +274,18 @@ public class Connection implements Closeable {
     }
 
     private TedisPacket getReponse() {
-        for (; ; ) {
-            try {
-                TedisPacket result = ClientFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
-                if (result == null) {
-                    throw new TedisException("get response time out");
-                }
-                if(result.hasErr()) {
-                    throw new TedisException(SafeEncoder.encode(result.getBody()));
-                }
-                return result;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return null;
+        try {
+            TedisPacket result = ClientFactory.get(clientName).poll(Protocol.DEFAULT_RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS);
+            if (result == null) {
+                throw new TedisException("get response time out");
             }
+            if (result.hasErr()) {
+                throw new TedisException(SafeEncoder.encode(result.getBody()));
+            }
+            return result;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

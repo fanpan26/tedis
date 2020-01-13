@@ -158,6 +158,7 @@ public class BufferReader {
     public static TedisPacket decode(ByteBuffer buffer, int limit, int position, String clientName) throws AioDecodeException {
         byte first = buffer.get();
         switch (first) {
+            //+OK
             case Protocol.PLUS_BYTE:
                 return buildPacket((byte[]) readSingleLineBody(buffer, limit, position), clientName);
             case Protocol.DOLLAR_BYTE:
